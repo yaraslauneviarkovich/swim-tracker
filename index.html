@@ -411,10 +411,14 @@
                 </div>
 
                 <div id="freeformField" class="form-group" style="display: none;">
-                    <label for="freeformTime">Time (e.g., 1:23.45, 32.18, 2:15.3)</label>
-                    <input type="text" id="freeformTime" placeholder="Examples: 1:23.45 or 32.18 or 2:15.3">
+                    <label for="freeformTime">Free-Form Entry (Single or Multiple Swims)</label>
+                    <textarea id="freeformTime" rows="8" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 0.95em;" placeholder="Enter one or more swims..."></textarea>
                     <small style="color: #666; display: block; margin-top: 5px;">
-                        Accepts: mm:ss.ms, ss.ms, m:ss.ms (periods or colons work)
+                        <strong>Single swim:</strong> 50y Fly 55.73 Addison 7 Feb 2026<br>
+                        <strong>Multiple swims:</strong><br>
+                        SCY 25ft (Addison, 7 Feb 2026):<br>
+                        50y Fly: 55.73 - last 58.39<br>
+                        100y free: 1:36.26 - last 1:41.68
                     </small>
                 </div>
 
@@ -558,12 +562,26 @@
             let currentMeet = { name: '', date: '', course: '' };
             
             for (let line of lines) {
-                // Check for course/meet line: "Short course (Addison, 7 Feb 2026)"
-                const meetMatch = line.match(/(short\s+course|long\s+course)\s*\(([^,]+),\s*(.+?)\)/i);
+                // Check for course/meet line with multiple formats:
+                // Format 1: "Short course (Addison, 7 Feb 2026)"
+                // Format 2: "SCY 25ft (Addison, 7 Feb 2026):"
+                // Format 3: "LCM (Addison, 7 Feb 2026)"
+                
+                const meetMatch1 = line.match(/(short\s+course|long\s+course)\s*\(([^,]+),\s*(.+?)\)/i);
+                const meetMatch2 = line.match(/(SCY|LCM)\s*(?:\d+ft)?\s*\(([^,]+),\s*(.+?)\)/i);
+                
+                let meetMatch = meetMatch1 || meetMatch2;
+                
                 if (meetMatch) {
-                    const courseType = meetMatch[1].toLowerCase().includes('short') ? 'SCY' : 'LCM';
+                    let courseType;
+                    if (meetMatch === meetMatch1) {
+                        courseType = meetMatch[1].toLowerCase().includes('short') ? 'SCY' : 'LCM';
+                    } else {
+                        courseType = meetMatch[1].toUpperCase();
+                    }
+                    
                     const location = meetMatch[2].trim();
-                    const dateStr = meetMatch[3].trim();
+                    const dateStr = meetMatch[3].trim().replace(/[:\s]+$/, ''); // Remove trailing colons
                     
                     currentMeet = {
                         course: courseType,
@@ -722,6 +740,71 @@
             }
         }
 
+        // Parse complete free-form entry with all details
+        function parseCompleteFreeformEntry(input) {
+            // Format: "50y Fly 55.73 Addison 7 Feb 2026"
+            // Pattern: [distance][y/m] [stroke] [time] [meet name] [date]
+            
+            input = input.trim();
+            
+            // Extract distance and unit: 50y, 100m, etc.
+            const distanceMatch = input.match(/^(\d+)([ym])\s+/i);
+            if (!distanceMatch) return null;
+            
+            const distance = distanceMatch[1];
+            const unit = distanceMatch[2].toLowerCase();
+            const course = unit === 'y' ? 'SCY' : 'LCM';
+            
+            // Remove distance from input
+            input = input.substring(distanceMatch[0].length).trim();
+            
+            // Extract stroke (free, fly, back, breast, im)
+            const strokeMatch = input.match(/^(free|fly|back|breast|im)\s+/i);
+            if (!strokeMatch) return null;
+            
+            const stroke = strokeMatch[1];
+            const eventName = `${distance} ${stroke.charAt(0).toUpperCase() + stroke.slice(1)}`;
+            
+            // Remove stroke from input
+            input = input.substring(strokeMatch[0].length).trim();
+            
+            // Extract time (first thing that looks like a time)
+            const timeMatch = input.match(/^([\d:.,]+)\s+/);
+            if (!timeMatch) return null;
+            
+            const timeStr = timeMatch[1];
+            const time = parseFreeformTime(timeStr);
+            if (time === null) return null;
+            
+            // Remove time from input
+            input = input.substring(timeMatch[0].length).trim();
+            
+            // What's left should be: "Addison 7 Feb 2026" or "Winter Champs 15 Jan 2026"
+            // Try to find date pattern at the end
+            const dateMatch = input.match(/(\d{1,2}\s+[a-z]+\s+\d{4})$/i);
+            let meetName = input;
+            let date = new Date().toISOString().split('T')[0]; // Default to today
+            
+            if (dateMatch) {
+                date = parseDate(dateMatch[1]);
+                // Meet name is everything before the date
+                meetName = input.substring(0, dateMatch.index).trim();
+            }
+            
+            // If no meet name provided, use a default
+            if (!meetName) {
+                meetName = 'Unnamed Meet';
+            }
+            
+            return {
+                course: course,
+                event: eventName,
+                time: time,
+                meetName: meetName,
+                date: date
+            };
+        }
+
         // Parse free-form time input
         function parseFreeformTime(input) {
             // Remove whitespace
@@ -807,34 +890,57 @@
         document.getElementById('swimForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            let totalSeconds;
             const method = document.querySelector('input[name="timeMethod"]:checked').value;
+            let newSwims = [];
             
             if (method === 'freeform') {
-                const freeformInput = document.getElementById('freeformTime').value;
-                totalSeconds = parseFreeformTime(freeformInput);
+                const freeformInput = document.getElementById('freeformTime').value.trim();
                 
-                if (totalSeconds === null) {
-                    alert('Invalid time format! Please use formats like:\n• 1:23.45 (1 min 23.45 sec)\n• 32.18 (32.18 seconds)\n• 1:23 (1 min 23 sec)');
-                    return;
+                // Check if it's multi-line (contains newlines)
+                if (freeformInput.includes('\n')) {
+                    // Use bulk parser
+                    newSwims = parseBulkText(freeformInput);
+                    if (newSwims.length === 0) {
+                        alert('Invalid format! Please check the examples.');
+                        return;
+                    }
+                } else {
+                    // Single line entry
+                    const parsed = parseCompleteFreeformEntry(freeformInput);
+                    if (parsed === null) {
+                        alert('Invalid format! Please use:\n[distance][y/m] [stroke] [time] [meet name] [date]\n\nExample:\n50y Fly 55.73 Addison 7 Feb 2026');
+                        return;
+                    }
+                    newSwims = [parsed];
                 }
+                
+                // Add all parsed swims
+                newSwims.forEach(swim => {
+                    swims.push({
+                        id: Date.now() + Math.random(),
+                        ...swim
+                    });
+                });
+                
             } else {
+                // Separate fields method
                 const minutes = parseInt(document.getElementById('minutes').value);
                 const seconds = parseInt(document.getElementById('seconds').value);
                 const hundredths = parseInt(document.getElementById('milliseconds').value);
-                totalSeconds = minutes * 60 + seconds + (hundredths / 100);
+                const totalSeconds = minutes * 60 + seconds + (hundredths / 100);
+                
+                const swim = {
+                    id: Date.now(),
+                    date: document.getElementById('meetDate').value,
+                    meetName: document.getElementById('meetName').value,
+                    course: document.getElementById('course').value,
+                    event: document.getElementById('event').value,
+                    time: totalSeconds
+                };
+                
+                swims.push(swim);
             }
             
-            const swim = {
-                id: Date.now(),
-                date: document.getElementById('meetDate').value,
-                meetName: document.getElementById('meetName').value,
-                course: document.getElementById('course').value,
-                event: document.getElementById('event').value,
-                time: totalSeconds
-            };
-            
-            swims.push(swim);
             localStorage.setItem('swimData', JSON.stringify(swims));
             
             this.reset();
@@ -843,7 +949,8 @@
             document.getElementById('seconds').value = '0';
             document.getElementById('milliseconds').value = '0';
             
-            alert('Swim time added successfully!');
+            const count = method === 'freeform' && newSwims.length > 1 ? `${newSwims.length} swim times` : 'Swim time';
+            alert(`${count} added successfully!`);
             populateEventFilters();
             updateProgressCharts();
             updateRecords();
