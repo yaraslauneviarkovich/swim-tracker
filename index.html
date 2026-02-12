@@ -562,13 +562,17 @@
             let currentMeet = { name: '', date: '', course: '' };
             
             for (let line of lines) {
+                // Remove trailing commas
+                line = line.replace(/,\s*$/, '');
+                
                 // Check for course/meet line with multiple formats:
                 // Format 1: "Short course (Addison, 7 Feb 2026)"
                 // Format 2: "SCY 25ft (Addison, 7 Feb 2026):"
-                // Format 3: "LCM (Addison, 7 Feb 2026)"
+                // Format 3: "SCY 25ft (Addison, 7 Feb 2026)" (no colon)
+                // Format 4: "LCM (Addison, 7 Feb 2026)"
                 
-                const meetMatch1 = line.match(/(short\s+course|long\s+course)\s*\(([^,]+),\s*(.+?)\)/i);
-                const meetMatch2 = line.match(/(SCY|LCM)\s*(?:\d+ft)?\s*\(([^,]+),\s*(.+?)\)/i);
+                const meetMatch1 = line.match(/(short\s+course|long\s+course)\s*\(([^,]+),\s*(.+?)\):?/i);
+                const meetMatch2 = line.match(/(SCY|LCM)\s*(?:\d+ft)?\s*\(([^,]+),\s*(.+?)\):?/i);
                 
                 let meetMatch = meetMatch1 || meetMatch2;
                 
@@ -581,7 +585,7 @@
                     }
                     
                     const location = meetMatch[2].trim();
-                    const dateStr = meetMatch[3].trim().replace(/[:\s]+$/, ''); // Remove trailing colons
+                    const dateStr = meetMatch[3].trim().replace(/[:\s]+$/, ''); // Remove trailing colons/spaces
                     
                     currentMeet = {
                         course: courseType,
@@ -593,6 +597,7 @@
                 
                 // Parse swim line: "50y Fly: 55.73 - last 58.39"
                 // or "100y free: 1:36.26 - last 1:41.68"
+                // or with leading dash: "100y free: - 1:36.26 - last 1:41.68"
                 // or with DQ: "100y breast: 1:48.69 - disqualification (1:49.80) - last 1:54.70"
                 
                 // Skip lines with "disqualification" or "DQ"
@@ -600,22 +605,23 @@
                     continue;
                 }
                 
-                const swimMatch = line.match(/(\d+)([ym])\s+(free|fly|back|breast|im)[:\s]+([^-]+)/i);
+                // Updated regex to handle optional leading dash/spaces before time
+                const swimMatch = line.match(/(\d+)([ym])\s+(free|fly|back|breast|im)[:\s]+[-\s]*([^-]+?)(?:\s*-\s*last|\s*$)/i);
                 if (swimMatch) {
                     const distance = swimMatch[1];
                     const unit = swimMatch[2].toLowerCase();
                     const stroke = swimMatch[3];
-                    const timeStr = swimMatch[4].trim();
+                    let timeStr = swimMatch[4].trim();
+                    
+                    // Remove any leading dashes and spaces
+                    timeStr = timeStr.replace(/^[-\s]+/, '');
                     
                     // Only process if it's yards (y) or meters (m) matching our course
                     // Skip if unit doesn't match course (y=SCY, m=LCM)
                     const expectedUnit = currentMeet.course === 'SCY' ? 'y' : 'm';
                     if (unit !== expectedUnit) continue;
                     
-                    // Extract first time (before "last")
-                    const firstTime = timeStr.split(/\s*-\s*last/i)[0].trim();
-                    
-                    const time = parseFreeformTime(firstTime);
+                    const time = parseFreeformTime(timeStr);
                     if (time === null) continue;
                     
                     // Build event name
@@ -819,8 +825,8 @@
             
             // Pattern 1: mm:ss.ms or mm:ss:ms (e.g., 1:23.45 or 1:23:45)
             const pattern1 = /^(\d+)[:.](\d+)[:\.](\d+)$/;
-            // Pattern 2: ss.ms (e.g., 32.18)
-            const pattern2 = /^(\d+)\.(\d+)$/;
+            // Pattern 2: ss.ms or ss:ms (e.g., 32.18 or 32:18 - could be 32.18 sec OR 32 min 18 sec)
+            const pattern2 = /^(\d+)[:\.](\d+)$/;
             // Pattern 3: mm:ss (e.g., 1:23)
             const pattern3 = /^(\d+):(\d+)$/;
             
@@ -840,20 +846,34 @@
                     hundredths = parseInt(match[3]) * 10;
                 }
             } else if (match = input.match(pattern2)) {
-                // ss.ms
-                seconds = parseInt(match[1]);
-                const decimal = match[2];
+                // ss.ms or ss:ms
+                const firstNum = parseInt(match[1]);
+                const secondNum = parseInt(match[2]);
                 
-                // Handle different decimal lengths
-                if (decimal.length === 1) {
-                    hundredths = parseInt(decimal) * 10;
-                } else if (decimal.length === 2) {
-                    hundredths = parseInt(decimal);
-                } else if (decimal.length === 3) {
-                    hundredths = Math.round(parseInt(decimal) / 10);
+                // Determine if it's mm:ss or ss.ms based on context
+                // If second number is < 60 and first number is < 10, likely ss.ms
+                // If second number is >= 60 or first number >= 10, likely mm:ss
+                if (secondNum >= 60 || (firstNum >= 10 && secondNum < 60)) {
+                    // Treat as mm:ss
+                    minutes = firstNum;
+                    seconds = secondNum;
+                    hundredths = 0;
+                } else {
+                    // Treat as ss.ms
+                    seconds = firstNum;
+                    const decimal = match[2];
+                    
+                    // Handle different decimal lengths
+                    if (decimal.length === 1) {
+                        hundredths = parseInt(decimal) * 10;
+                    } else if (decimal.length === 2) {
+                        hundredths = parseInt(decimal);
+                    } else if (decimal.length === 3) {
+                        hundredths = Math.round(parseInt(decimal) / 10);
+                    }
                 }
             } else if (match = input.match(pattern3)) {
-                // mm:ss
+                // mm:ss (already handled by pattern2, but keep for clarity)
                 minutes = parseInt(match[1]);
                 seconds = parseInt(match[2]);
                 hundredths = 0;
@@ -871,7 +891,7 @@
             }
             
             // Validate ranges
-            if (seconds >= 60 || hundredths >= 100) {
+            if (seconds >= 60 || hundredths >= 100 || minutes < 0 || seconds < 0 || hundredths < 0) {
                 return null;
             }
             
