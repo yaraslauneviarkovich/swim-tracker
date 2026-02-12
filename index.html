@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,278 +13,281 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+```
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+    }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow: hidden;
-        }
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        overflow: hidden;
+    }
 
-        .header {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
+    .header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
 
+    .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .header p {
+        opacity: 0.9;
+        font-size: 1.1em;
+    }
+
+    .tabs {
+        display: flex;
+        background: #f5f5f5;
+        border-bottom: 2px solid #ddd;
+    }
+
+    .tab {
+        flex: 1;
+        padding: 20px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+        border: none;
+        background: transparent;
+        font-size: 1em;
+    }
+
+    .tab:hover {
+        background: #e0e0e0;
+    }
+
+    .tab.active {
+        background: white;
+        color: #2a5298;
+        border-bottom: 3px solid #2a5298;
+    }
+
+    .tab-content {
+        display: none;
+        padding: 30px;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+        transition: border 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: #2a5298;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        width: 100%;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .chart-container {
+        position: relative;
+        height: 400px;
+        margin-bottom: 30px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .stat-card h3 {
+        color: #2a5298;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+
+    .stat-card .value {
+        font-size: 2em;
+        font-weight: bold;
+        color: #1e3c72;
+    }
+
+    .records-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .records-table th,
+    .records-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .records-table th {
+        background: #2a5298;
+        color: white;
+        font-weight: 600;
+    }
+
+    .records-table tr:hover {
+        background: #f5f5f5;
+    }
+
+    .standard-badge {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        font-weight: 600;
+        color: white;
+    }
+
+    .standard-B { background: #95a5a6; }
+    .standard-BB { background: #3498db; }
+    .standard-A { background: #2ecc71; }
+    .standard-AA { background: #f39c12; }
+    .standard-AAA { background: #e74c3c; }
+    .standard-AAAA { background: #9b59b6; }
+
+    .swim-entry {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .swim-entry-info {
+        flex: 1;
+    }
+
+    .swim-entry-info strong {
+        color: #2a5298;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .delete-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+    }
+
+    .delete-btn:hover {
+        background: #c0392b;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #999;
+    }
+
+    .empty-state svg {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 20px;
+        opacity: 0.3;
+    }
+
+    .filter-controls {
+        margin-bottom: 20px;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .filter-controls select {
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1em;
+    }
+
+    @media (max-width: 768px) {
         .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.8em;
         }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
-
+        
         .tabs {
-            display: flex;
-            background: #f5f5f5;
-            border-bottom: 2px solid #ddd;
+            flex-direction: column;
         }
-
-        .tab {
-            flex: 1;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            border: none;
-            background: transparent;
-            font-size: 1em;
-        }
-
-        .tab:hover {
-            background: #e0e0e0;
-        }
-
-        .tab.active {
-            background: white;
-            color: #2a5298;
-            border-bottom: 3px solid #2a5298;
-        }
-
-        .tab-content {
-            display: none;
-            padding: 30px;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-            transition: border 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: #2a5298;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-size: 1.1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
+        
         .chart-container {
-            position: relative;
-            height: 400px;
-            margin-bottom: 30px;
+            height: 300px;
         }
+    }
+</style>
+```
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .stat-card h3 {
-            color: #2a5298;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-        }
-
-        .stat-card .value {
-            font-size: 2em;
-            font-weight: bold;
-            color: #1e3c72;
-        }
-
-        .records-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        .records-table th,
-        .records-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .records-table th {
-            background: #2a5298;
-            color: white;
-            font-weight: 600;
-        }
-
-        .records-table tr:hover {
-            background: #f5f5f5;
-        }
-
-        .standard-badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            font-weight: 600;
-            color: white;
-        }
-
-        .standard-B { background: #95a5a6; }
-        .standard-BB { background: #3498db; }
-        .standard-A { background: #2ecc71; }
-        .standard-AA { background: #f39c12; }
-        .standard-AAA { background: #e74c3c; }
-        .standard-AAAA { background: #9b59b6; }
-
-        .swim-entry {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .swim-entry-info {
-            flex: 1;
-        }
-
-        .swim-entry-info strong {
-            color: #2a5298;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .delete-btn {
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .delete-btn:hover {
-            background: #c0392b;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #999;
-        }
-
-        .empty-state svg {
-            width: 100px;
-            height: 100px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .filter-controls {
-            margin-bottom: 20px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .filter-controls select {
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 1em;
-        }
-
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8em;
-            }
-            
-            .tabs {
-                flex-direction: column;
-            }
-            
-            .chart-container {
-                height: 300px;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -292,1019 +296,1007 @@
             <p>10 & Under | USA Swimming Standards 2024-2028</p>
         </div>
 
-        <div class="tabs">
-            <button class="tab active" onclick="switchTab('entry')">Add Swim</button>
-            <button class="tab" onclick="switchTab('bulk')">Bulk Import</button>
-            <button class="tab" onclick="switchTab('progress')">Progress Charts</button>
-            <button class="tab" onclick="switchTab('records')">Personal Records</button>
-            <button class="tab" onclick="switchTab('standards')">Standards Comparison</button>
-            <button class="tab" onclick="switchTab('history')">Swim History</button>
-        </div>
+```
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('entry')">Add Swim</button>
+        <button class="tab" onclick="switchTab('bulk')">Bulk Import</button>
+        <button class="tab" onclick="switchTab('progress')">Progress Charts</button>
+        <button class="tab" onclick="switchTab('records')">Personal Records</button>
+        <button class="tab" onclick="switchTab('standards')">Standards Comparison</button>
+        <button class="tab" onclick="switchTab('history')">Swim History</button>
+    </div>
 
-        <!-- Bulk Import Tab -->
-        <div id="bulk" class="tab-content">
-            <h2 style="margin-bottom: 20px;">Bulk Import from Text</h2>
-            <p style="color: #666; margin-bottom: 20px;">
-                Paste your swim meet results and we'll automatically parse them. Format example:
-            </p>
-            <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-family: monospace; font-size: 0.9em;">
-                Short course (Addison, 7 Feb 2026)<br>
-                50y Fly: 55.73 - last 58.39<br>
-                100y free: 1:36.26 - last 1:41.68<br>
-                100y IM: 1:44.76 - last 1:46.40
+    <!-- Bulk Import Tab -->
+    <div id="bulk" class="tab-content">
+        <h2 style="margin-bottom: 20px;">Bulk Import from Text</h2>
+        <p style="color: #666; margin-bottom: 20px;">
+            Paste your swim meet results and we'll automatically parse them. Format example:
+        </p>
+        <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-family: monospace; font-size: 0.9em;">
+            Short course (Addison, 7 Feb 2026)<br>
+            50y Fly: 55.73 - last 58.39<br>
+            100y free: 1:36.26 - last 1:41.68<br>
+            100y IM: 1:44.76 - last 1:46.40
+        </div>
+        
+        <form id="bulkForm">
+            <div class="form-group">
+                <label for="bulkText">Paste Meet Results</label>
+                <textarea id="bulkText" rows="12" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 0.95em;" placeholder="Paste your meet results here..."></textarea>
             </div>
             
-            <form id="bulkForm">
+            <div id="bulkPreview" style="display: none; margin: 20px 0; padding: 20px; background: #e8f5e9; border-radius: 8px; border: 2px solid #4caf50;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Preview - Found <span id="previewCount">0</span> swims:</h3>
+                <div id="previewContent"></div>
+            </div>
+            
+            <div style="display: flex; gap: 15px;">
+                <button type="button" class="btn" onclick="previewBulkImport()" style="flex: 1;">Preview Import</button>
+                <button type="submit" class="btn" style="flex: 1; background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);">Import All</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Entry Tab -->
+    <div id="entry" class="tab-content active">
+        <h2 style="margin-bottom: 20px;">Add New Swim Time</h2>
+        <form id="swimForm">
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="bulkText">Paste Meet Results</label>
-                    <textarea id="bulkText" rows="12" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 0.95em;" placeholder="Paste your meet results here..."></textarea>
+                    <label for="meetDate">Meet Date</label>
+                    <input type="date" id="meetDate" required>
                 </div>
-                
-                <div id="bulkPreview" style="display: none; margin: 20px 0; padding: 20px; background: #e8f5e9; border-radius: 8px; border: 2px solid #4caf50;">
-                    <h3 style="color: #2e7d32; margin-bottom: 15px;">Preview - Found <span id="previewCount">0</span> swims:</h3>
-                    <div id="previewContent"></div>
-                </div>
-                
-                <div style="display: flex; gap: 15px;">
-                    <button type="button" class="btn" onclick="previewBulkImport()" style="flex: 1;">Preview Import</button>
-                    <button type="submit" class="btn" style="flex: 1; background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);">Import All</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- Entry Tab -->
-        <div id="entry" class="tab-content active">
-            <h2 style="margin-bottom: 20px;">Add New Swim Time</h2>
-            <form id="swimForm">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="meetDate">Meet Date</label>
-                        <input type="date" id="meetDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="meetName">Meet Name</label>
-                        <input type="text" id="meetName" placeholder="e.g., Winter Championships" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="course">Course</label>
-                        <select id="course" required>
-                            <option value="">Select Course</option>
-                            <option value="SCY">SCY (Short Course Yards)</option>
-                            <option value="LCM">LCM (Long Course Meters)</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="event">Event</label>
-                        <select id="event" required>
-                            <option value="">Select Event</option>
-                            <option value="50 Free">50 Free</option>
-                            <option value="100 Free">100 Free</option>
-                            <option value="200 Free">200 Free</option>
-                            <option value="400 Free">400 Free</option>
-                            <option value="800 Free">800 Free</option>
-                            <option value="50 Back">50 Back</option>
-                            <option value="100 Back">100 Back</option>
-                            <option value="200 Back">200 Back</option>
-                            <option value="50 Breast">50 Breast</option>
-                            <option value="100 Breast">100 Breast</option>
-                            <option value="200 Breast">200 Breast</option>
-                            <option value="50 Fly">50 Fly</option>
-                            <option value="100 Fly">100 Fly</option>
-                            <option value="200 Fly">200 Fly</option>
-                            <option value="100 IM">100 IM</option>
-                            <option value="200 IM">200 IM</option>
-                            <option value="400 IM">400 IM</option>
-                        </select>
-                    </div>
-                </div>
-
                 <div class="form-group">
-                    <label>Time Entry Method</label>
-                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
-                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-                            <input type="radio" name="timeMethod" value="separate" checked onchange="toggleTimeInput()">
-                            <span>Separate Fields</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
-                            <input type="radio" name="timeMethod" value="freeform" onchange="toggleTimeInput()">
-                            <span>Free-form Text</span>
-                        </label>
-                    </div>
+                    <label for="meetName">Meet Name</label>
+                    <input type="text" id="meetName" placeholder="e.g., Winter Championships" required>
                 </div>
+            </div>
 
-                <div id="separateFields" class="form-row">
-                    <div class="form-group">
-                        <label for="minutes">Minutes</label>
-                        <input type="number" id="minutes" min="0" max="59" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="seconds">Seconds</label>
-                        <input type="number" id="seconds" min="0" max="59" value="0">
-                    </div>
-                    <div class="form-group">
-                        <label for="milliseconds">Hundredths (00-99)</label>
-                        <input type="number" id="milliseconds" min="0" max="99" value="0">
-                    </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="course">Course</label>
+                    <select id="course" required>
+                        <option value="">Select Course</option>
+                        <option value="SCY">SCY (Short Course Yards)</option>
+                        <option value="LCM">LCM (Long Course Meters)</option>
+                    </select>
                 </div>
-
-                <div id="freeformField" class="form-group" style="display: none;">
-                    <label for="freeformTime">Free-Form Entry (Single or Multiple Swims)</label>
-                    <textarea id="freeformTime" rows="8" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 0.95em;" placeholder="Enter one or more swims..."></textarea>
-                    <small style="color: #666; display: block; margin-top: 5px;">
-                        <strong>Single swim:</strong> 50y Fly 55.73 Addison 7 Feb 2026<br>
-                        <strong>Multiple swims:</strong><br>
-                        SCY 25ft (Addison, 7 Feb 2026):<br>
-                        50y Fly: 55.73 - last 58.39<br>
-                        100y free: 1:36.26 - last 1:41.68
-                    </small>
+                <div class="form-group">
+                    <label for="event">Event</label>
+                    <select id="event" required>
+                        <option value="">Select Event</option>
+                        <option value="50 Free">50 Free</option>
+                        <option value="100 Free">100 Free</option>
+                        <option value="200 Free">200 Free</option>
+                        <option value="400 Free">400 Free</option>
+                        <option value="800 Free">800 Free</option>
+                        <option value="50 Back">50 Back</option>
+                        <option value="100 Back">100 Back</option>
+                        <option value="200 Back">200 Back</option>
+                        <option value="50 Breast">50 Breast</option>
+                        <option value="100 Breast">100 Breast</option>
+                        <option value="200 Breast">200 Breast</option>
+                        <option value="50 Fly">50 Fly</option>
+                        <option value="100 Fly">100 Fly</option>
+                        <option value="200 Fly">200 Fly</option>
+                        <option value="100 IM">100 IM</option>
+                        <option value="200 IM">200 IM</option>
+                        <option value="400 IM">400 IM</option>
+                    </select>
                 </div>
+            </div>
 
-                <button type="submit" class="btn">Add Swim Time</button>
-            </form>
+            <div class="form-group">
+                <label>Time Entry Method</label>
+                <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="radio" name="timeMethod" value="separate" checked onchange="toggleTimeInput()">
+                        <span>Separate Fields</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                        <input type="radio" name="timeMethod" value="freeform" onchange="toggleTimeInput()">
+                        <span>Free-form Text</span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="separateFields" class="form-row">
+                <div class="form-group">
+                    <label for="minutes">Minutes</label>
+                    <input type="number" id="minutes" min="0" max="59" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="seconds">Seconds</label>
+                    <input type="number" id="seconds" min="0" max="59" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="milliseconds">Hundredths (00-99)</label>
+                    <input type="number" id="milliseconds" min="0" max="99" value="0">
+                </div>
+            </div>
+
+            <div id="freeformField" class="form-group" style="display: none;">
+                <label for="freeformTime">Free-Form Entry (Single or Multiple Swims)</label>
+                <textarea id="freeformTime" rows="8" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 0.95em;" placeholder="Enter one or more swims..."></textarea>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    <strong>Single swim:</strong> 50y Fly 55.73 Addison 7 Feb 2026<br>
+                    <strong>Multiple swims:</strong><br>
+                    SCY 25ft (Addison, 7 Feb 2026):<br>
+                    50y Fly: 55.73 - last 58.39<br>
+                    100y free: 1:36.26 - last 1:41.68
+                </small>
+            </div>
+
+            <button type="submit" class="btn">Add Swim Time</button>
+        </form>
+    </div>
+
+    <!-- Progress Tab -->
+    <div id="progress" class="tab-content">
+        <h2 style="margin-bottom: 20px;">Progress Over Time</h2>
+        <div class="filter-controls">
+            <select id="progressEvent" onchange="updateProgressCharts()">
+                <option value="">All Events</option>
+            </select>
+            <select id="progressCourse" onchange="updateProgressCharts()">
+                <option value="">All Courses</option>
+                <option value="SCY">SCY Only</option>
+                <option value="LCM">LCM Only</option>
+            </select>
         </div>
-
-        <!-- Progress Tab -->
-        <div id="progress" class="tab-content">
-            <h2 style="margin-bottom: 20px;">Progress Over Time</h2>
-            <div class="filter-controls">
-                <select id="progressEvent" onchange="updateProgressCharts()">
-                    <option value="">All Events</option>
-                </select>
-                <select id="progressCourse" onchange="updateProgressCharts()">
-                    <option value="">All Courses</option>
-                    <option value="SCY">SCY Only</option>
-                    <option value="LCM">LCM Only</option>
-                </select>
-            </div>
-            <div class="chart-container">
-                <canvas id="progressChart"></canvas>
-            </div>
-            <h3 style="margin-top: 30px; margin-bottom: 20px;">Speed Analysis (meters per second)</h3>
-            <div class="chart-container">
-                <canvas id="speedChart"></canvas>
-            </div>
+        <div class="chart-container">
+            <canvas id="progressChart"></canvas>
         </div>
-
-        <!-- Records Tab -->
-        <div id="records" class="tab-content">
-            <h2 style="margin-bottom: 20px;">Personal Records</h2>
-            <div class="filter-controls">
-                <select id="recordsCourse" onchange="updateRecords()">
-                    <option value="">All Courses</option>
-                    <option value="SCY">SCY Only</option>
-                    <option value="LCM">LCM Only</option>
-                </select>
-            </div>
-            <table class="records-table">
-                <thead>
-                    <tr>
-                        <th>Event</th>
-                        <th>Course</th>
-                        <th>Best Time</th>
-                        <th>Standard</th>
-                        <th>Meet</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
-                <tbody id="recordsBody">
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Standards Tab -->
-        <div id="standards" class="tab-content">
-            <h2 style="margin-bottom: 20px;">Standards Comparison</h2>
-            <div class="filter-controls">
-                <select id="standardsEvent" onchange="updateStandards()">
-                    <option value="">Select Event</option>
-                </select>
-                <select id="standardsCourse" onchange="updateStandards()">
-                    <option value="">Select Course</option>
-                    <option value="SCY">SCY</option>
-                    <option value="LCM">LCM</option>
-                </select>
-            </div>
-            <div id="standardsContent"></div>
-        </div>
-
-        <!-- History Tab -->
-        <div id="history" class="tab-content">
-            <h2 style="margin-bottom: 20px;">All Swim Times</h2>
-            <div class="filter-controls">
-                <select id="historyEvent" onchange="updateHistory()">
-                    <option value="">All Events</option>
-                </select>
-                <select id="historyCourse" onchange="updateHistory()">
-                    <option value="">All Courses</option>
-                    <option value="SCY">SCY Only</option>
-                    <option value="LCM">LCM Only</option>
-                </select>
-            </div>
-            <div id="historyContent"></div>
+        <h3 style="margin-top: 30px; margin-bottom: 20px;">Speed Analysis (meters per second)</h3>
+        <div class="chart-container">
+            <canvas id="speedChart"></canvas>
         </div>
     </div>
 
-    <script>
-        // USA Swimming 2024-2028 Motivational Standards for 10 & Under
-        const STANDARDS = {
-            "SCY": {
-                "50 Free": { "AAAA": 29.49, "AAA": 30.79, "AA": 32.29, "A": 34.29, "BB": 37.69, "B": 42.19 },
-                "100 Free": { "AAAA": 64.69, "AAA": 67.59, "AA": 71.09, "A": 75.69, "BB": 83.59, "B": 94.19 },
-                "200 Free": { "AAAA": 142.09, "AAA": 148.59, "AA": 156.69, "A": 167.29, "BB": 186.89, "B": 212.29 },
-                "500 Free": { "AAAA": 391.39, "AAA": 410.29, "AA": 433.49, "A": 464.79, "BB": 522.39, "B": 598.69 },
-                "1000 Free": { "AAAA": 818.49, "AAA": 858.79, "AA": 907.59, "A": 974.59, "BB": 1098.89, "B": 1268.69 },
-                "50 Back": { "AAAA": 34.39, "AAA": 35.99, "AA": 37.89, "A": 40.29, "BB": 44.69, "B": 50.59 },
-                "100 Back": { "AAAA": 75.09, "AAA": 78.69, "AA": 83.09, "A": 88.89, "BB": 99.49, "B": 113.89 },
-                "200 Back": { "AAAA": 165.49, "AAA": 173.39, "AA": 183.49, "A": 197.09, "BB": 222.49, "B": 258.49 },
-                "50 Breast": { "AAAA": 39.49, "AAA": 41.39, "AA": 43.69, "A": 46.69, "BB": 52.09, "B": 59.39 },
-                "100 Breast": { "AAAA": 85.89, "AAA": 90.09, "AA": 95.49, "A": 102.69, "BB": 115.79, "B": 133.89 },
-                "200 Breast": { "AAAA": 187.89, "AAA": 197.09, "AA": 209.09, "A": 225.49, "BB": 255.79, "B": 299.49 },
-                "50 Fly": { "AAAA": 33.39, "AAA": 34.99, "AA": 36.99, "A": 39.49, "BB": 44.09, "B": 50.29 },
-                "100 Fly": { "AAAA": 75.49, "AAA": 79.19, "AA": 83.89, "A": 90.09, "BB": 101.69, "B": 117.99 },
-                "200 Fly": { "AAAA": 169.79, "AAA": 178.19, "AA": 188.99, "A": 203.69, "BB": 231.49, "B": 272.29 },
-                "100 IM": { "AAAA": 73.49, "AAA": 77.09, "AA": 81.69, "A": 87.69, "BB": 98.79, "B": 113.89 },
-                "200 IM": { "AAAA": 161.09, "AAA": 169.09, "AA": 179.29, "A": 193.09, "BB": 218.89, "B": 255.39 },
-                "400 IM": { "AAAA": 343.99, "AAA": 361.09, "AA": 383.09, "A": 413.19, "BB": 471.59, "B": 557.19 }
-            },
-            "LCM": {
-                "50 Free": { "AAAA": 33.29, "AAA": 34.69, "AA": 36.39, "A": 38.69, "BB": 42.59, "B": 47.79 },
-                "100 Free": { "AAAA": 72.79, "AAA": 76.09, "AA": 80.19, "A": 85.59, "BB": 94.79, "B": 107.39 },
-                "200 Free": { "AAAA": 159.79, "AAA": 167.19, "AA": 176.59, "A": 189.39, "BB": 211.99, "B": 242.19 },
-                "400 Free": { "AAAA": 333.49, "AAA": 349.79, "AA": 370.19, "A": 398.49, "BB": 450.89, "B": 521.09 },
-                "800 Free": { "AAAA": 693.89, "AAA": 728.39, "AA": 772.09, "A": 831.99, "BB": 947.89, "B": 1104.79 },
-                "1500 Free": { "AAAA": 1314.39, "AAA": 1380.29, "AA": 1462.79, "A": 1578.49, "BB": 1799.79, "B": 2107.99 },
-                "50 Back": { "AAAA": 38.79, "AAA": 40.49, "AA": 42.69, "A": 45.59, "BB": 50.69, "B": 57.69 },
-                "100 Back": { "AAAA": 84.59, "AAA": 88.59, "AA": 93.69, "A": 100.49, "BB": 112.79, "B": 129.79 },
-                "200 Back": { "AAAA": 185.99, "AAA": 195.09, "AA": 206.89, "A": 222.69, "BB": 252.29, "B": 294.99 },
-                "50 Breast": { "AAAA": 44.59, "AAA": 46.69, "AA": 49.29, "A": 52.79, "BB": 58.99, "B": 67.49 },
-                "100 Breast": { "AAAA": 96.59, "AAA": 101.19, "AA": 107.29, "A": 115.49, "BB": 130.39, "B": 151.39 },
-                "200 Breast": { "AAAA": 210.89, "AAA": 221.19, "AA": 234.79, "A": 253.49, "BB": 288.49, "B": 339.69 },
-                "50 Fly": { "AAAA": 37.59, "AAA": 39.29, "AA": 41.59, "A": 44.59, "BB": 49.89, "B": 57.19 },
-                "100 Fly": { "AAAA": 84.79, "AAA": 88.89, "AA": 94.29, "A": 101.49, "BB": 114.89, "B": 133.79 },
-                "200 Fly": { "AAAA": 190.59, "AAA": 199.99, "AA": 212.39, "A": 229.19, "BB": 261.39, "B": 309.79 },
-                "200 IM": { "AAAA": 180.89, "AAA": 189.69, "AA": 201.29, "A": 217.09, "BB": 247.09, "B": 290.49 },
-                "400 IM": { "AAAA": 385.69, "AAA": 404.99, "AA": 430.09, "A": 464.49, "BB": 531.99, "B": 633.89 }
-            }
-        };
+    <!-- Records Tab -->
+    <div id="records" class="tab-content">
+        <h2 style="margin-bottom: 20px;">Personal Records</h2>
+        <div class="filter-controls">
+            <select id="recordsCourse" onchange="updateRecords()">
+                <option value="">All Courses</option>
+                <option value="SCY">SCY Only</option>
+                <option value="LCM">LCM Only</option>
+            </select>
+        </div>
+        <table class="records-table">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Course</th>
+                    <th>Best Time</th>
+                    <th>Standard</th>
+                    <th>Meet</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody id="recordsBody">
+            </tbody>
+        </table>
+    </div>
 
-        let swims = JSON.parse(localStorage.getItem('swimData')) || [];
-        let progressChart = null;
-        let speedChart = null;
-        let bulkParsedSwims = [];
+    <!-- Standards Tab -->
+    <div id="standards" class="tab-content">
+        <h2 style="margin-bottom: 20px;">Standards Comparison</h2>
+        <div class="filter-controls">
+            <select id="standardsEvent" onchange="updateStandards()">
+                <option value="">Select Event</option>
+            </select>
+            <select id="standardsCourse" onchange="updateStandards()">
+                <option value="">Select Course</option>
+                <option value="SCY">SCY</option>
+                <option value="LCM">LCM</option>
+            </select>
+        </div>
+        <div id="standardsContent"></div>
+    </div>
 
-        // Bulk import parser
-        function parseBulkText(text) {
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            const swims = [];
-            let currentMeet = { name: '', date: '', course: '' };
-            
-            for (let line of lines) {
-                // Remove trailing commas
-                line = line.replace(/,\s*$/, '');
-                
-                // Check for course/meet line with multiple formats:
-                // Format 1: "Short course (Addison, 7 Feb 2026)"
-                // Format 2: "SCY 25ft (Addison, 7 Feb 2026):"
-                // Format 3: "SCY 25ft (Addison, 7 Feb 2026)" (no colon)
-                // Format 4: "LCM (Addison, 7 Feb 2026)"
-                
-                const meetMatch1 = line.match(/(short\s+course|long\s+course)\s*\(([^,]+),\s*(.+?)\):?/i);
-                const meetMatch2 = line.match(/(SCY|LCM)\s*(?:\d+ft)?\s*\(([^,]+),\s*(.+?)\):?/i);
-                
-                let meetMatch = meetMatch1 || meetMatch2;
-                
-                if (meetMatch) {
-                    let courseType;
-                    if (meetMatch === meetMatch1) {
-                        courseType = meetMatch[1].toLowerCase().includes('short') ? 'SCY' : 'LCM';
-                    } else {
-                        courseType = meetMatch[1].toUpperCase();
-                    }
-                    
-                    const location = meetMatch[2].trim();
-                    const dateStr = meetMatch[3].trim().replace(/[:\s]+$/, ''); // Remove trailing colons/spaces
-                    
-                    currentMeet = {
-                        course: courseType,
-                        name: location,
-                        date: parseDate(dateStr)
-                    };
-                    continue;
-                }
-                
-                // Parse swim line: "50y Fly: 55.73 - last 58.39"
-                // or "100y free: 1:36.26 - last 1:41.68"
-                // or with leading dash: "100y free: - 1:36.26 - last 1:41.68"
-                // or without "last": "50y breast: - 49.62"
-                // or with DQ: "100y breast: 1:48.69 - disqualification (1:49.80) - last 1:54.70"
-                
-                // Skip lines with "disqualification" or "DQ"
-                if (line.match(/disqualification|dq/i)) {
-                    continue;
-                }
-                
-                // Match event line - capture everything after the colon
-                const swimMatch = line.match(/(\d+)([ym])\s+(free|fly|back|breast|im)[:\s]+(.+)$/i);
-                if (swimMatch) {
-                    const distance = swimMatch[1];
-                    const unit = swimMatch[2].toLowerCase();
-                    const stroke = swimMatch[3];
-                    let timeStr = swimMatch[4].trim();
-                    
-                    // Only process if it's yards (y) or meters (m) matching our course
-                    const expectedUnit = currentMeet.course === 'SCY' ? 'y' : 'm';
-                    if (unit !== expectedUnit) continue;
-                    
-                    // Remove leading dashes and spaces
-                    timeStr = timeStr.replace(/^[-\s]+/, '');
-                    
-                    // Extract first time (before "last" if it exists)
-                    if (timeStr.includes('last')) {
-                        timeStr = timeStr.split(/\s*-?\s*last/i)[0].trim();
-                    }
-                    
-                    // Remove any trailing dashes
-                    timeStr = timeStr.replace(/\s*-\s*$/, '').trim();
-                    
-                    const time = parseFreeformTime(timeStr);
-                    if (time === null) continue;
-                    
-                    // Build event name
-                    const eventName = `${distance} ${stroke.charAt(0).toUpperCase() + stroke.slice(1)}`;
-                    
-                    swims.push({
-                        date: currentMeet.date,
-                        meetName: currentMeet.name,
-                        course: currentMeet.course,
-                        event: eventName,
-                        time: time
-                    });
-                }
-            }
-            
-            return swims;
+    <!-- History Tab -->
+    <div id="history" class="tab-content">
+        <h2 style="margin-bottom: 20px;">All Swim Times</h2>
+        <div class="filter-controls">
+            <select id="historyEvent" onchange="updateHistory()">
+                <option value="">All Events</option>
+            </select>
+            <select id="historyCourse" onchange="updateHistory()">
+                <option value="">All Courses</option>
+                <option value="SCY">SCY Only</option>
+                <option value="LCM">LCM Only</option>
+            </select>
+        </div>
+        <div id="historyContent"></div>
+    </div>
+</div>
+
+<script>
+    // USA Swimming 2024-2028 Motivational Standards for 10 & Under
+    const STANDARDS = {
+        "SCY": {
+            "50 Free": { "AAAA": 29.49, "AAA": 30.79, "AA": 32.29, "A": 34.29, "BB": 37.69, "B": 42.19 },
+            "100 Free": { "AAAA": 64.69, "AAA": 67.59, "AA": 71.09, "A": 75.69, "BB": 83.59, "B": 94.19 },
+            "200 Free": { "AAAA": 142.09, "AAA": 148.59, "AA": 156.69, "A": 167.29, "BB": 186.89, "B": 212.29 },
+            "500 Free": { "AAAA": 391.39, "AAA": 410.29, "AA": 433.49, "A": 464.79, "BB": 522.39, "B": 598.69 },
+            "1000 Free": { "AAAA": 818.49, "AAA": 858.79, "AA": 907.59, "A": 974.59, "BB": 1098.89, "B": 1268.69 },
+            "50 Back": { "AAAA": 34.39, "AAA": 35.99, "AA": 37.89, "A": 40.29, "BB": 44.69, "B": 50.59 },
+            "100 Back": { "AAAA": 75.09, "AAA": 78.69, "AA": 83.09, "A": 88.89, "BB": 99.49, "B": 113.89 },
+            "200 Back": { "AAAA": 165.49, "AAA": 173.39, "AA": 183.49, "A": 197.09, "BB": 222.49, "B": 258.49 },
+            "50 Breast": { "AAAA": 39.49, "AAA": 41.39, "AA": 43.69, "A": 46.69, "BB": 52.09, "B": 59.39 },
+            "100 Breast": { "AAAA": 85.89, "AAA": 90.09, "AA": 95.49, "A": 102.69, "BB": 115.79, "B": 133.89 },
+            "200 Breast": { "AAAA": 187.89, "AAA": 197.09, "AA": 209.09, "A": 225.49, "BB": 255.79, "B": 299.49 },
+            "50 Fly": { "AAAA": 33.39, "AAA": 34.99, "AA": 36.99, "A": 39.49, "BB": 44.09, "B": 50.29 },
+            "100 Fly": { "AAAA": 75.49, "AAA": 79.19, "AA": 83.89, "A": 90.09, "BB": 101.69, "B": 117.99 },
+            "200 Fly": { "AAAA": 169.79, "AAA": 178.19, "AA": 188.99, "A": 203.69, "BB": 231.49, "B": 272.29 },
+            "100 IM": { "AAAA": 73.49, "AAA": 77.09, "AA": 81.69, "A": 87.69, "BB": 98.79, "B": 113.89 },
+            "200 IM": { "AAAA": 161.09, "AAA": 169.09, "AA": 179.29, "A": 193.09, "BB": 218.89, "B": 255.39 },
+            "400 IM": { "AAAA": 343.99, "AAA": 361.09, "AA": 383.09, "A": 413.19, "BB": 471.59, "B": 557.19 }
+        },
+        "LCM": {
+            "50 Free": { "AAAA": 33.29, "AAA": 34.69, "AA": 36.39, "A": 38.69, "BB": 42.59, "B": 47.79 },
+            "100 Free": { "AAAA": 72.79, "AAA": 76.09, "AA": 80.19, "A": 85.59, "BB": 94.79, "B": 107.39 },
+            "200 Free": { "AAAA": 159.79, "AAA": 167.19, "AA": 176.59, "A": 189.39, "BB": 211.99, "B": 242.19 },
+            "400 Free": { "AAAA": 333.49, "AAA": 349.79, "AA": 370.19, "A": 398.49, "BB": 450.89, "B": 521.09 },
+            "800 Free": { "AAAA": 693.89, "AAA": 728.39, "AA": 772.09, "A": 831.99, "BB": 947.89, "B": 1104.79 },
+            "1500 Free": { "AAAA": 1314.39, "AAA": 1380.29, "AA": 1462.79, "A": 1578.49, "BB": 1799.79, "B": 2107.99 },
+            "50 Back": { "AAAA": 38.79, "AAA": 40.49, "AA": 42.69, "A": 45.59, "BB": 50.69, "B": 57.69 },
+            "100 Back": { "AAAA": 84.59, "AAA": 88.59, "AA": 93.69, "A": 100.49, "BB": 112.79, "B": 129.79 },
+            "200 Back": { "AAAA": 185.99, "AAA": 195.09, "AA": 206.89, "A": 222.69, "BB": 252.29, "B": 294.99 },
+            "50 Breast": { "AAAA": 44.59, "AAA": 46.69, "AA": 49.29, "A": 52.79, "BB": 58.99, "B": 67.49 },
+            "100 Breast": { "AAAA": 96.59, "AAA": 101.19, "AA": 107.29, "A": 115.49, "BB": 130.39, "B": 151.39 },
+            "200 Breast": { "AAAA": 210.89, "AAA": 221.19, "AA": 234.79, "A": 253.49, "BB": 288.49, "B": 339.69 },
+            "50 Fly": { "AAAA": 37.59, "AAA": 39.29, "AA": 41.59, "A": 44.59, "BB": 49.89, "B": 57.19 },
+            "100 Fly": { "AAAA": 84.79, "AAA": 88.89, "AA": 94.29, "A": 101.49, "BB": 114.89, "B": 133.79 },
+            "200 Fly": { "AAAA": 190.59, "AAA": 199.99, "AA": 212.39, "A": 229.19, "BB": 261.39, "B": 309.79 },
+            "200 IM": { "AAAA": 180.89, "AAA": 189.69, "AA": 201.29, "A": 217.09, "BB": 247.09, "B": 290.49 },
+            "400 IM": { "AAAA": 385.69, "AAA": 404.99, "AA": 430.09, "A": 464.49, "BB": 531.99, "B": 633.89 }
         }
+    };
+
+    let swims = JSON.parse(localStorage.getItem('swimData')) || [];
+    let progressChart = null;
+    let speedChart = null;
+    let bulkParsedSwims = [];
+
+    // Bulk import parser
+    function parseBulkText(text) {
+        const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+        const swims = [];
+        let currentMeet = { name: '', date: '', course: '' };
         
-        function parseDate(dateStr) {
-            // Parse "7 Feb 2026" format
-            const months = {
-                'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
-                'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11
-            };
+        for (let line of lines) {
+            // Remove trailing commas
+            line = line.replace(/,\s*$/, '');
             
-            const match = dateStr.match(/(\d+)\s+([a-z]+)\s+(\d{4})/i);
-            if (match) {
-                const day = parseInt(match[1]);
-                const monthStr = match[2].toLowerCase().substring(0, 3);
-                const year = parseInt(match[3]);
-                const month = months[monthStr];
-                
-                if (month !== undefined) {
-                    const date = new Date(year, month, day);
-                    return date.toISOString().split('T')[0];
+            // Check for course/meet line with multiple formats:
+            // Format 1: "Short course (Addison, 7 Feb 2026)"
+            // Format 2: "SCY 25ft (Addison, 7 Feb 2026):"
+            // Format 3: "SCY 25ft (Addison, 7 Feb 2026)" (no colon)
+            // Format 4: "LCM (Addison, 7 Feb 2026)"
+            
+            const meetMatch1 = line.match(/(short\s+course|long\s+course)\s*\(([^,]+),\s*(.+?)\):?/i);
+            const meetMatch2 = line.match(/(SCY|LCM)\s*(?:\d+ft)?\s*\(([^,]+),\s*(.+?)\):?/i);
+            
+            let meetMatch = meetMatch1 || meetMatch2;
+            
+            if (meetMatch) {
+                let courseType;
+                if (meetMatch === meetMatch1) {
+                    courseType = meetMatch[1].toLowerCase().includes('short') ? 'SCY' : 'LCM';
+                } else {
+                    courseType = meetMatch[1].toUpperCase();
                 }
+                
+                const location = meetMatch[2].trim();
+                const dateStr = meetMatch[3].trim().replace(/[:\s]+$/, ''); // Remove trailing colons/spaces
+                
+                currentMeet = {
+                    course: courseType,
+                    name: location,
+                    date: parseDate(dateStr)
+                };
+                continue;
             }
             
-            // Fallback to today's date
-            return new Date().toISOString().split('T')[0];
-        }
-        
-        function previewBulkImport() {
-            const text = document.getElementById('bulkText').value;
-            bulkParsedSwims = parseBulkText(text);
+            // Parse swim line in clean format: "50y Fly: 55:73,"
+            // No "last", no "DQ", no extra dashes - just event and time
             
-            const preview = document.getElementById('bulkPreview');
-            const count = document.getElementById('previewCount');
-            const content = document.getElementById('previewContent');
-            
-            if (bulkParsedSwims.length === 0) {
-                alert('No valid swim times found. Please check the format.');
-                preview.style.display = 'none';
-                return;
-            }
-            
-            count.textContent = bulkParsedSwims.length;
-            content.innerHTML = bulkParsedSwims.map((swim, idx) => `
-                <div style="background: white; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #4caf50;">
-                    <strong>${idx + 1}. ${swim.event} (${swim.course})</strong><br>
-                    <span style="color: #666;">Time: ${formatTime(swim.time)} | ${swim.meetName} | ${new Date(swim.date).toLocaleDateString()}</span>
-                </div>
-            `).join('');
-            
-            preview.style.display = 'block';
-        }
-        
-        document.getElementById('bulkForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (bulkParsedSwims.length === 0) {
-                alert('Please preview the import first!');
-                return;
-            }
-            
-            // Add all parsed swims
-            bulkParsedSwims.forEach(swim => {
+            // Match event line - simple format
+            const swimMatch = line.match(/(\d+)([ym])\s+(free|fly|back|breast|im)[:\s]+(.+)$/i);
+            if (swimMatch) {
+                const distance = swimMatch[1];
+                const unit = swimMatch[2].toLowerCase();
+                const stroke = swimMatch[3];
+                let timeStr = swimMatch[4].trim();
+                
+                // Only process if it's yards (y) or meters (m) matching our course
+                const expectedUnit = currentMeet.course === 'SCY' ? 'y' : 'm';
+                if (unit !== expectedUnit) continue;
+                
+                // Clean up the time string - remove any spaces within the time
+                // Handle cases like "1: 44.76" -> "1:44.76"
+                timeStr = timeStr.replace(/\s+/g, '');
+                
+                const time = parseFreeformTime(timeStr);
+                if (time === null) continue;
+                
+                // Build event name
+                const eventName = `${distance} ${stroke.charAt(0).toUpperCase() + stroke.slice(1)}`;
+                
                 swims.push({
-                    id: Date.now() + Math.random(), // Unique ID
-                    ...swim
+                    date: currentMeet.date,
+                    meetName: currentMeet.name,
+                    course: currentMeet.course,
+                    event: eventName,
+                    time: time
                 });
+            }
+        }
+        
+        return swims;
+    }
+    
+    function parseDate(dateStr) {
+        // Parse "7 Feb 2026" format
+        const months = {
+            'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
+            'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11
+        };
+        
+        const match = dateStr.match(/(\d+)\s+([a-z]+)\s+(\d{4})/i);
+        if (match) {
+            const day = parseInt(match[1]);
+            const monthStr = match[2].toLowerCase().substring(0, 3);
+            const year = parseInt(match[3]);
+            const month = months[monthStr];
+            
+            if (month !== undefined) {
+                const date = new Date(year, month, day);
+                return date.toISOString().split('T')[0];
+            }
+        }
+        
+        // Fallback to today's date
+        return new Date().toISOString().split('T')[0];
+    }
+    
+    function previewBulkImport() {
+        const text = document.getElementById('bulkText').value;
+        bulkParsedSwims = parseBulkText(text);
+        
+        const preview = document.getElementById('bulkPreview');
+        const count = document.getElementById('previewCount');
+        const content = document.getElementById('previewContent');
+        
+        if (bulkParsedSwims.length === 0) {
+            alert('No valid swim times found. Please check the format.');
+            preview.style.display = 'none';
+            return;
+        }
+        
+        count.textContent = bulkParsedSwims.length;
+        content.innerHTML = bulkParsedSwims.map((swim, idx) => `
+            <div style="background: white; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #4caf50;">
+                <strong>${idx + 1}. ${swim.event} (${swim.course})</strong><br>
+                <span style="color: #666;">Time: ${formatTime(swim.time)} | ${swim.meetName} | ${new Date(swim.date).toLocaleDateString()}</span>
+            </div>
+        `).join('');
+        
+        preview.style.display = 'block';
+    }
+    
+    document.getElementById('bulkForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        if (bulkParsedSwims.length === 0) {
+            alert('Please preview the import first!');
+            return;
+        }
+        
+        // Add all parsed swims
+        bulkParsedSwims.forEach(swim => {
+            swims.push({
+                id: Date.now() + Math.random(), // Unique ID
+                ...swim
             });
-            
-            localStorage.setItem('swimData', JSON.stringify(swims));
-            
-            // Reset form
-            document.getElementById('bulkText').value = '';
-            document.getElementById('bulkPreview').style.display = 'none';
-            bulkParsedSwims = [];
-            
-            alert(`Successfully imported ${bulkParsedSwims.length} swim times!`);
-            populateEventFilters();
-            updateProgressCharts();
-            updateRecords();
-            updateHistory();
         });
-
-        // Toggle between separate fields and free-form input
-        function toggleTimeInput() {
-            const method = document.querySelector('input[name="timeMethod"]:checked').value;
-            const separateFields = document.getElementById('separateFields');
-            const freeformField = document.getElementById('freeformField');
-            
-            if (method === 'freeform') {
-                separateFields.style.display = 'none';
-                freeformField.style.display = 'block';
-                // Remove required from separate fields
-                document.getElementById('minutes').removeAttribute('required');
-                document.getElementById('seconds').removeAttribute('required');
-                document.getElementById('milliseconds').removeAttribute('required');
-                // Add required to freeform
-                document.getElementById('freeformTime').setAttribute('required', 'required');
-            } else {
-                separateFields.style.display = 'grid';
-                freeformField.style.display = 'none';
-                // Add required to separate fields
-                document.getElementById('minutes').setAttribute('required', 'required');
-                document.getElementById('seconds').setAttribute('required', 'required');
-                document.getElementById('milliseconds').setAttribute('required', 'required');
-                // Remove required from freeform
-                document.getElementById('freeformTime').removeAttribute('required');
-            }
-        }
-
-        // Parse complete free-form entry with all details
-        function parseCompleteFreeformEntry(input) {
-            // Format: "50y Fly 55.73 Addison 7 Feb 2026"
-            // Pattern: [distance][y/m] [stroke] [time] [meet name] [date]
-            
-            input = input.trim();
-            
-            // Extract distance and unit: 50y, 100m, etc.
-            const distanceMatch = input.match(/^(\d+)([ym])\s+/i);
-            if (!distanceMatch) return null;
-            
-            const distance = distanceMatch[1];
-            const unit = distanceMatch[2].toLowerCase();
-            const course = unit === 'y' ? 'SCY' : 'LCM';
-            
-            // Remove distance from input
-            input = input.substring(distanceMatch[0].length).trim();
-            
-            // Extract stroke (free, fly, back, breast, im)
-            const strokeMatch = input.match(/^(free|fly|back|breast|im)\s+/i);
-            if (!strokeMatch) return null;
-            
-            const stroke = strokeMatch[1];
-            const eventName = `${distance} ${stroke.charAt(0).toUpperCase() + stroke.slice(1)}`;
-            
-            // Remove stroke from input
-            input = input.substring(strokeMatch[0].length).trim();
-            
-            // Extract time (first thing that looks like a time)
-            const timeMatch = input.match(/^([\d:.,]+)\s+/);
-            if (!timeMatch) return null;
-            
-            const timeStr = timeMatch[1];
-            const time = parseFreeformTime(timeStr);
-            if (time === null) return null;
-            
-            // Remove time from input
-            input = input.substring(timeMatch[0].length).trim();
-            
-            // What's left should be: "Addison 7 Feb 2026" or "Winter Champs 15 Jan 2026"
-            // Try to find date pattern at the end
-            const dateMatch = input.match(/(\d{1,2}\s+[a-z]+\s+\d{4})$/i);
-            let meetName = input;
-            let date = new Date().toISOString().split('T')[0]; // Default to today
-            
-            if (dateMatch) {
-                date = parseDate(dateMatch[1]);
-                // Meet name is everything before the date
-                meetName = input.substring(0, dateMatch.index).trim();
-            }
-            
-            // If no meet name provided, use a default
-            if (!meetName) {
-                meetName = 'Unnamed Meet';
-            }
-            
-            return {
-                course: course,
-                event: eventName,
-                time: time,
-                meetName: meetName,
-                date: date
-            };
-        }
-
-        // Parse free-form time input
-        function parseFreeformTime(input) {
-            // Remove whitespace
-            input = input.trim();
-            
-            // Replace commas with periods (some countries use commas for decimals)
-            input = input.replace(',', '.');
-            
-            let minutes = 0;
-            let seconds = 0;
-            let hundredths = 0;
-            
-            // Pattern 1: mm:ss.ms or mm:ss:ms (e.g., 1:23.45 or 1:23:45)
-            const pattern1 = /^(\d+)[:.](\d+)[:\.](\d+)$/;
-            // Pattern 2: ss.ms or ss:ms (e.g., 32.18 or 32:18 - could be 32.18 sec OR 32 min 18 sec)
-            const pattern2 = /^(\d+)[:\.](\d+)$/;
-            // Pattern 3: mm:ss (e.g., 1:23)
-            const pattern3 = /^(\d+):(\d+)$/;
-            
-            let match;
-            
-            if (match = input.match(pattern1)) {
-                // mm:ss.ms or mm:ss:ms
-                minutes = parseInt(match[1]);
-                seconds = parseInt(match[2]);
-                hundredths = parseInt(match[3]);
-                
-                // Handle if third part is meant to be milliseconds (3 digits)
-                if (match[3].length === 3) {
-                    hundredths = Math.round(parseInt(match[3]) / 10);
-                } else if (match[3].length === 1) {
-                    // Single digit - multiply by 10
-                    hundredths = parseInt(match[3]) * 10;
-                }
-            } else if (match = input.match(pattern2)) {
-                // ss.ms or ss:ms
-                const firstNum = parseInt(match[1]);
-                const secondNum = parseInt(match[2]);
-                
-                // Determine if it's mm:ss or ss.ms based on context
-                // If second number is < 60 and first number is < 10, likely ss.ms
-                // If second number is >= 60 or first number >= 10, likely mm:ss
-                if (secondNum >= 60 || (firstNum >= 10 && secondNum < 60)) {
-                    // Treat as mm:ss
-                    minutes = firstNum;
-                    seconds = secondNum;
-                    hundredths = 0;
-                } else {
-                    // Treat as ss.ms
-                    seconds = firstNum;
-                    const decimal = match[2];
-                    
-                    // Handle different decimal lengths
-                    if (decimal.length === 1) {
-                        hundredths = parseInt(decimal) * 10;
-                    } else if (decimal.length === 2) {
-                        hundredths = parseInt(decimal);
-                    } else if (decimal.length === 3) {
-                        hundredths = Math.round(parseInt(decimal) / 10);
-                    }
-                }
-            } else if (match = input.match(pattern3)) {
-                // mm:ss (already handled by pattern2, but keep for clarity)
-                minutes = parseInt(match[1]);
-                seconds = parseInt(match[2]);
-                hundredths = 0;
-            } else {
-                // Try parsing as plain seconds
-                const plainSeconds = parseFloat(input);
-                if (!isNaN(plainSeconds)) {
-                    minutes = Math.floor(plainSeconds / 60);
-                    const remainingSeconds = plainSeconds % 60;
-                    seconds = Math.floor(remainingSeconds);
-                    hundredths = Math.round((remainingSeconds - seconds) * 100);
-                } else {
-                    return null; // Invalid format
-                }
-            }
-            
-            // Validate ranges
-            if (seconds >= 60 || hundredths >= 100 || minutes < 0 || seconds < 0 || hundredths < 0) {
-                return null;
-            }
-            
-            // Convert to total seconds
-            return minutes * 60 + seconds + (hundredths / 100);
-        }
-
-        // Initialize
-        document.getElementById('meetDate').valueAsDate = new Date();
+        
+        localStorage.setItem('swimData', JSON.stringify(swims));
+        
+        // Reset form
+        document.getElementById('bulkText').value = '';
+        document.getElementById('bulkPreview').style.display = 'none';
+        bulkParsedSwims = [];
+        
+        alert(`Successfully imported ${bulkParsedSwims.length} swim times!`);
         populateEventFilters();
         updateProgressCharts();
         updateRecords();
         updateHistory();
+    });
 
-        // Form submission
-        document.getElementById('swimForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+    // Toggle between separate fields and free-form input
+    function toggleTimeInput() {
+        const method = document.querySelector('input[name="timeMethod"]:checked').value;
+        const separateFields = document.getElementById('separateFields');
+        const freeformField = document.getElementById('freeformField');
+        
+        if (method === 'freeform') {
+            separateFields.style.display = 'none';
+            freeformField.style.display = 'block';
+            // Remove required from separate fields
+            document.getElementById('minutes').removeAttribute('required');
+            document.getElementById('seconds').removeAttribute('required');
+            document.getElementById('milliseconds').removeAttribute('required');
+            // Add required to freeform
+            document.getElementById('freeformTime').setAttribute('required', 'required');
+        } else {
+            separateFields.style.display = 'grid';
+            freeformField.style.display = 'none';
+            // Add required to separate fields
+            document.getElementById('minutes').setAttribute('required', 'required');
+            document.getElementById('seconds').setAttribute('required', 'required');
+            document.getElementById('milliseconds').setAttribute('required', 'required');
+            // Remove required from freeform
+            document.getElementById('freeformTime').removeAttribute('required');
+        }
+    }
+
+    // Parse complete free-form entry with all details
+    function parseCompleteFreeformEntry(input) {
+        // Format: "50y Fly 55.73 Addison 7 Feb 2026"
+        // Pattern: [distance][y/m] [stroke] [time] [meet name] [date]
+        
+        input = input.trim();
+        
+        // Extract distance and unit: 50y, 100m, etc.
+        const distanceMatch = input.match(/^(\d+)([ym])\s+/i);
+        if (!distanceMatch) return null;
+        
+        const distance = distanceMatch[1];
+        const unit = distanceMatch[2].toLowerCase();
+        const course = unit === 'y' ? 'SCY' : 'LCM';
+        
+        // Remove distance from input
+        input = input.substring(distanceMatch[0].length).trim();
+        
+        // Extract stroke (free, fly, back, breast, im)
+        const strokeMatch = input.match(/^(free|fly|back|breast|im)\s+/i);
+        if (!strokeMatch) return null;
+        
+        const stroke = strokeMatch[1];
+        const eventName = `${distance} ${stroke.charAt(0).toUpperCase() + stroke.slice(1)}`;
+        
+        // Remove stroke from input
+        input = input.substring(strokeMatch[0].length).trim();
+        
+        // Extract time (first thing that looks like a time)
+        const timeMatch = input.match(/^([\d:.,]+)\s+/);
+        if (!timeMatch) return null;
+        
+        const timeStr = timeMatch[1];
+        const time = parseFreeformTime(timeStr);
+        if (time === null) return null;
+        
+        // Remove time from input
+        input = input.substring(timeMatch[0].length).trim();
+        
+        // What's left should be: "Addison 7 Feb 2026" or "Winter Champs 15 Jan 2026"
+        // Try to find date pattern at the end
+        const dateMatch = input.match(/(\d{1,2}\s+[a-z]+\s+\d{4})$/i);
+        let meetName = input;
+        let date = new Date().toISOString().split('T')[0]; // Default to today
+        
+        if (dateMatch) {
+            date = parseDate(dateMatch[1]);
+            // Meet name is everything before the date
+            meetName = input.substring(0, dateMatch.index).trim();
+        }
+        
+        // If no meet name provided, use a default
+        if (!meetName) {
+            meetName = 'Unnamed Meet';
+        }
+        
+        return {
+            course: course,
+            event: eventName,
+            time: time,
+            meetName: meetName,
+            date: date
+        };
+    }
+
+    // Parse free-form time input
+    function parseFreeformTime(input) {
+        // Remove whitespace
+        input = input.trim();
+        
+        // Replace commas with periods (some countries use commas for decimals)
+        input = input.replace(',', '.');
+        
+        let minutes = 0;
+        let seconds = 0;
+        let hundredths = 0;
+        
+        // Pattern 1: mm:ss.ms or mm:ss:ms (e.g., 1:23.45 or 1:23:45)
+        const pattern1 = /^(\d+)[:.](\d+)[:\.](\d+)$/;
+        // Pattern 2: ss.ms or ss:ms (e.g., 32.18 or 32:18 - could be 32.18 sec OR 32 min 18 sec)
+        const pattern2 = /^(\d+)[:\.](\d+)$/;
+        // Pattern 3: mm:ss (e.g., 1:23)
+        const pattern3 = /^(\d+):(\d+)$/;
+        
+        let match;
+        
+        if (match = input.match(pattern1)) {
+            // mm:ss.ms or mm:ss:ms
+            minutes = parseInt(match[1]);
+            seconds = parseInt(match[2]);
+            hundredths = parseInt(match[3]);
             
-            const method = document.querySelector('input[name="timeMethod"]:checked').value;
-            let newSwims = [];
+            // Handle if third part is meant to be milliseconds (3 digits)
+            if (match[3].length === 3) {
+                hundredths = Math.round(parseInt(match[3]) / 10);
+            } else if (match[3].length === 1) {
+                // Single digit - multiply by 10
+                hundredths = parseInt(match[3]) * 10;
+            }
+        } else if (match = input.match(pattern2)) {
+            // ss.ms or ss:ms
+            const firstNum = parseInt(match[1]);
+            const secondNum = parseInt(match[2]);
             
-            if (method === 'freeform') {
-                const freeformInput = document.getElementById('freeformTime').value.trim();
-                
-                // Check if it's multi-line (contains newlines)
-                if (freeformInput.includes('\n')) {
-                    // Use bulk parser
-                    newSwims = parseBulkText(freeformInput);
-                    if (newSwims.length === 0) {
-                        alert('Invalid format! Please check the examples.');
-                        return;
-                    }
-                } else {
-                    // Single line entry
-                    const parsed = parseCompleteFreeformEntry(freeformInput);
-                    if (parsed === null) {
-                        alert('Invalid format! Please use:\n[distance][y/m] [stroke] [time] [meet name] [date]\n\nExample:\n50y Fly 55.73 Addison 7 Feb 2026');
-                        return;
-                    }
-                    newSwims = [parsed];
-                }
-                
-                // Add all parsed swims
-                newSwims.forEach(swim => {
-                    swims.push({
-                        id: Date.now() + Math.random(),
-                        ...swim
-                    });
-                });
-                
+            // Determine if it's mm:ss or ss.ms based on context
+            // If second number is < 60 and first number is < 10, likely ss.ms
+            // If second number is >= 60 or first number >= 10, likely mm:ss
+            if (secondNum >= 60 || (firstNum >= 10 && secondNum < 60)) {
+                // Treat as mm:ss
+                minutes = firstNum;
+                seconds = secondNum;
+                hundredths = 0;
             } else {
-                // Separate fields method
-                const minutes = parseInt(document.getElementById('minutes').value);
-                const seconds = parseInt(document.getElementById('seconds').value);
-                const hundredths = parseInt(document.getElementById('milliseconds').value);
-                const totalSeconds = minutes * 60 + seconds + (hundredths / 100);
+                // Treat as ss.ms
+                seconds = firstNum;
+                const decimal = match[2];
                 
-                const swim = {
-                    id: Date.now(),
-                    date: document.getElementById('meetDate').value,
-                    meetName: document.getElementById('meetName').value,
-                    course: document.getElementById('course').value,
-                    event: document.getElementById('event').value,
-                    time: totalSeconds
-                };
-                
-                swims.push(swim);
-            }
-            
-            localStorage.setItem('swimData', JSON.stringify(swims));
-            
-            this.reset();
-            document.getElementById('meetDate').valueAsDate = new Date();
-            document.getElementById('minutes').value = '0';
-            document.getElementById('seconds').value = '0';
-            document.getElementById('milliseconds').value = '0';
-            
-            const count = method === 'freeform' && newSwims.length > 1 ? `${newSwims.length} swim times` : 'Swim time';
-            alert(`${count} added successfully!`);
-            populateEventFilters();
-            updateProgressCharts();
-            updateRecords();
-            updateHistory();
-        });
-
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
-            document.getElementById(tabName).classList.add('active');
-            
-            if (tabName === 'progress') updateProgressCharts();
-            if (tabName === 'records') updateRecords();
-            if (tabName === 'standards') updateStandards();
-            if (tabName === 'history') updateHistory();
-        }
-
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = (seconds % 60).toFixed(2);
-            return mins > 0 ? `${mins}:${secs.padStart(5, '0')}` : `${secs}`;
-        }
-
-        function getStandard(course, event, time) {
-            const standards = STANDARDS[course]?.[event];
-            if (!standards) return null;
-            
-            if (time <= standards.AAAA) return 'AAAA';
-            if (time <= standards.AAA) return 'AAA';
-            if (time <= standards.AA) return 'AA';
-            if (time <= standards.A) return 'A';
-            if (time <= standards.BB) return 'BB';
-            if (time <= standards.B) return 'B';
-            return null;
-        }
-
-        function getNextStandard(course, event, time) {
-            const standards = STANDARDS[course]?.[event];
-            if (!standards) return null;
-            
-            const levels = ['B', 'BB', 'A', 'AA', 'AAA', 'AAAA'];
-            for (let level of levels) {
-                if (time > standards[level]) {
-                    return { level, time: standards[level], improvement: time - standards[level] };
+                // Handle different decimal lengths
+                if (decimal.length === 1) {
+                    hundredths = parseInt(decimal) * 10;
+                } else if (decimal.length === 2) {
+                    hundredths = parseInt(decimal);
+                } else if (decimal.length === 3) {
+                    hundredths = Math.round(parseInt(decimal) / 10);
                 }
             }
+        } else if (match = input.match(pattern3)) {
+            // mm:ss (already handled by pattern2, but keep for clarity)
+            minutes = parseInt(match[1]);
+            seconds = parseInt(match[2]);
+            hundredths = 0;
+        } else {
+            // Try parsing as plain seconds
+            const plainSeconds = parseFloat(input);
+            if (!isNaN(plainSeconds)) {
+                minutes = Math.floor(plainSeconds / 60);
+                const remainingSeconds = plainSeconds % 60;
+                seconds = Math.floor(remainingSeconds);
+                hundredths = Math.round((remainingSeconds - seconds) * 100);
+            } else {
+                return null; // Invalid format
+            }
+        }
+        
+        // Validate ranges
+        if (seconds >= 60 || hundredths >= 100 || minutes < 0 || seconds < 0 || hundredths < 0) {
             return null;
         }
+        
+        // Convert to total seconds
+        return minutes * 60 + seconds + (hundredths / 100);
+    }
 
-        function populateEventFilters() {
-            const events = [...new Set(swims.map(s => s.event))].sort();
-            
-            ['progressEvent', 'historyEvent', 'standardsEvent'].forEach(id => {
-                const select = document.getElementById(id);
-                const currentValue = select.value;
-                select.innerHTML = '<option value="">All Events</option>';
-                events.forEach(event => {
-                    select.innerHTML += `<option value="${event}">${event}</option>`;
-                });
-                select.value = currentValue;
-            });
-        }
+    // Initialize
+    document.getElementById('meetDate').valueAsDate = new Date();
+    populateEventFilters();
+    updateProgressCharts();
+    updateRecords();
+    updateHistory();
 
-        function updateProgressCharts() {
-            const eventFilter = document.getElementById('progressEvent').value;
-            const courseFilter = document.getElementById('progressCourse').value;
+    // Form submission
+    document.getElementById('swimForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const method = document.querySelector('input[name="timeMethod"]:checked').value;
+        let newSwims = [];
+        
+        if (method === 'freeform') {
+            const freeformInput = document.getElementById('freeformTime').value.trim();
             
-            let filteredSwims = swims.filter(s => {
-                return (!eventFilter || s.event === eventFilter) &&
-                       (!courseFilter || s.course === courseFilter);
-            });
-            
-            filteredSwims.sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            const ctx1 = document.getElementById('progressChart').getContext('2d');
-            const ctx2 = document.getElementById('speedChart').getContext('2d');
-            
-            if (progressChart) progressChart.destroy();
-            if (speedChart) speedChart.destroy();
-            
-            if (filteredSwims.length === 0) {
-                return;
+            // Check if it's multi-line (contains newlines)
+            if (freeformInput.includes('\n')) {
+                // Use bulk parser
+                newSwims = parseBulkText(freeformInput);
+                if (newSwims.length === 0) {
+                    alert('Invalid format! Please check the examples.');
+                    return;
+                }
+            } else {
+                // Single line entry
+                const parsed = parseCompleteFreeformEntry(freeformInput);
+                if (parsed === null) {
+                    alert('Invalid format! Please use:\n[distance][y/m] [stroke] [time] [meet name] [date]\n\nExample:\n50y Fly 55.73 Addison 7 Feb 2026');
+                    return;
+                }
+                newSwims = [parsed];
             }
             
-            // Group by event for multiple lines
-            const eventGroups = {};
-            filteredSwims.forEach(swim => {
-                const key = `${swim.event} (${swim.course})`;
-                if (!eventGroups[key]) eventGroups[key] = [];
-                eventGroups[key].push(swim);
+            // Add all parsed swims
+            newSwims.forEach(swim => {
+                swims.push({
+                    id: Date.now() + Math.random(),
+                    ...swim
+                });
             });
             
-            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
+        } else {
+            // Separate fields method
+            const minutes = parseInt(document.getElementById('minutes').value);
+            const seconds = parseInt(document.getElementById('seconds').value);
+            const hundredths = parseInt(document.getElementById('milliseconds').value);
+            const totalSeconds = minutes * 60 + seconds + (hundredths / 100);
             
-            const datasets = Object.keys(eventGroups).map((key, idx) => ({
+            const swim = {
+                id: Date.now(),
+                date: document.getElementById('meetDate').value,
+                meetName: document.getElementById('meetName').value,
+                course: document.getElementById('course').value,
+                event: document.getElementById('event').value,
+                time: totalSeconds
+            };
+            
+            swims.push(swim);
+        }
+        
+        localStorage.setItem('swimData', JSON.stringify(swims));
+        
+        this.reset();
+        document.getElementById('meetDate').valueAsDate = new Date();
+        document.getElementById('minutes').value = '0';
+        document.getElementById('seconds').value = '0';
+        document.getElementById('milliseconds').value = '0';
+        
+        const count = method === 'freeform' && newSwims.length > 1 ? `${newSwims.length} swim times` : 'Swim time';
+        alert(`${count} added successfully!`);
+        populateEventFilters();
+        updateProgressCharts();
+        updateRecords();
+        updateHistory();
+    });
+
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        event.target.classList.add('active');
+        document.getElementById(tabName).classList.add('active');
+        
+        if (tabName === 'progress') updateProgressCharts();
+        if (tabName === 'records') updateRecords();
+        if (tabName === 'standards') updateStandards();
+        if (tabName === 'history') updateHistory();
+    }
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = (seconds % 60).toFixed(2);
+        return mins > 0 ? `${mins}:${secs.padStart(5, '0')}` : `${secs}`;
+    }
+
+    function getStandard(course, event, time) {
+        const standards = STANDARDS[course]?.[event];
+        if (!standards) return null;
+        
+        if (time <= standards.AAAA) return 'AAAA';
+        if (time <= standards.AAA) return 'AAA';
+        if (time <= standards.AA) return 'AA';
+        if (time <= standards.A) return 'A';
+        if (time <= standards.BB) return 'BB';
+        if (time <= standards.B) return 'B';
+        return null;
+    }
+
+    function getNextStandard(course, event, time) {
+        const standards = STANDARDS[course]?.[event];
+        if (!standards) return null;
+        
+        const levels = ['B', 'BB', 'A', 'AA', 'AAA', 'AAAA'];
+        for (let level of levels) {
+            if (time > standards[level]) {
+                return { level, time: standards[level], improvement: time - standards[level] };
+            }
+        }
+        return null;
+    }
+
+    function populateEventFilters() {
+        const events = [...new Set(swims.map(s => s.event))].sort();
+        
+        ['progressEvent', 'historyEvent', 'standardsEvent'].forEach(id => {
+            const select = document.getElementById(id);
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">All Events</option>';
+            events.forEach(event => {
+                select.innerHTML += `<option value="${event}">${event}</option>`;
+            });
+            select.value = currentValue;
+        });
+    }
+
+    function updateProgressCharts() {
+        const eventFilter = document.getElementById('progressEvent').value;
+        const courseFilter = document.getElementById('progressCourse').value;
+        
+        let filteredSwims = swims.filter(s => {
+            return (!eventFilter || s.event === eventFilter) &&
+                   (!courseFilter || s.course === courseFilter);
+        });
+        
+        filteredSwims.sort((a, b) => new Date(a.date) - new Date(b.date));
+        
+        const ctx1 = document.getElementById('progressChart').getContext('2d');
+        const ctx2 = document.getElementById('speedChart').getContext('2d');
+        
+        if (progressChart) progressChart.destroy();
+        if (speedChart) speedChart.destroy();
+        
+        if (filteredSwims.length === 0) {
+            return;
+        }
+        
+        // Group by event for multiple lines
+        const eventGroups = {};
+        filteredSwims.forEach(swim => {
+            const key = `${swim.event} (${swim.course})`;
+            if (!eventGroups[key]) eventGroups[key] = [];
+            eventGroups[key].push(swim);
+        });
+        
+        const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
+        
+        const datasets = Object.keys(eventGroups).map((key, idx) => ({
+            label: key,
+            data: eventGroups[key].map(s => ({ x: s.date, y: s.time })),
+            borderColor: colors[idx % colors.length],
+            backgroundColor: colors[idx % colors.length] + '33',
+            tension: 0.4,
+            fill: false
+        }));
+        
+        progressChart = new Chart(ctx1, {
+            type: 'line',
+            data: { datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Time Progress (Lower is Better)', font: { size: 16 } },
+                    legend: { display: true }
+                },
+                scales: {
+                    x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                    y: { 
+                        reverse: true,
+                        title: { display: true, text: 'Time (seconds)' },
+                        ticks: { callback: value => formatTime(value) }
+                    }
+                }
+            }
+        });
+        
+        // Speed chart
+        const speedDatasets = Object.keys(eventGroups).map((key, idx) => {
+            const event = eventGroups[key][0].event;
+            const distance = parseInt(event.split(' ')[0]);
+            return {
                 label: key,
-                data: eventGroups[key].map(s => ({ x: s.date, y: s.time })),
+                data: eventGroups[key].map(s => ({ 
+                    x: s.date, 
+                    y: distance / s.time 
+                })),
                 borderColor: colors[idx % colors.length],
                 backgroundColor: colors[idx % colors.length] + '33',
                 tension: 0.4,
                 fill: false
-            }));
-            
-            progressChart = new Chart(ctx1, {
-                type: 'line',
-                data: { datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: true, text: 'Time Progress (Lower is Better)', font: { size: 16 } },
-                        legend: { display: true }
-                    },
-                    scales: {
-                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
-                        y: { 
-                            reverse: true,
-                            title: { display: true, text: 'Time (seconds)' },
-                            ticks: { callback: value => formatTime(value) }
-                        }
+            };
+        });
+        
+        speedChart = new Chart(ctx2, {
+            type: 'line',
+            data: { datasets: speedDatasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Speed Progress (Higher is Better)', font: { size: 16 } },
+                    legend: { display: true }
+                },
+                scales: {
+                    x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                    y: { 
+                        title: { display: true, text: 'Speed (m/s)' },
+                        ticks: { callback: value => value.toFixed(2) }
                     }
                 }
-            });
-            
-            // Speed chart
-            const speedDatasets = Object.keys(eventGroups).map((key, idx) => {
-                const event = eventGroups[key][0].event;
-                const distance = parseInt(event.split(' ')[0]);
-                return {
-                    label: key,
-                    data: eventGroups[key].map(s => ({ 
-                        x: s.date, 
-                        y: distance / s.time 
-                    })),
-                    borderColor: colors[idx % colors.length],
-                    backgroundColor: colors[idx % colors.length] + '33',
-                    tension: 0.4,
-                    fill: false
-                };
-            });
-            
-            speedChart = new Chart(ctx2, {
-                type: 'line',
-                data: { datasets: speedDatasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: true, text: 'Speed Progress (Higher is Better)', font: { size: 16 } },
-                        legend: { display: true }
-                    },
-                    scales: {
-                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
-                        y: { 
-                            title: { display: true, text: 'Speed (m/s)' },
-                            ticks: { callback: value => value.toFixed(2) }
-                        }
-                    }
-                }
-            });
-        }
+            }
+        });
+    }
 
-        function updateRecords() {
-            const courseFilter = document.getElementById('recordsCourse').value;
-            const tbody = document.getElementById('recordsBody');
-            
-            let filteredSwims = swims.filter(s => !courseFilter || s.course === courseFilter);
-            
-            // Get best time for each event/course combo
-            const records = {};
-            filteredSwims.forEach(swim => {
-                const key = `${swim.event}-${swim.course}`;
-                if (!records[key] || swim.time < records[key].time) {
-                    records[key] = swim;
-                }
-            });
-            
-            tbody.innerHTML = '';
-            Object.values(records).sort((a, b) => a.event.localeCompare(b.event)).forEach(record => {
-                const standard = getStandard(record.course, record.event, record.time);
-                const standardBadge = standard ? 
-                    `<span class="standard-badge standard-${standard}">${standard}</span>` : 
-                    '<span style="color: #999;">No Standard</span>';
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td><strong>${record.event}</strong></td>
-                        <td>${record.course}</td>
-                        <td><strong>${formatTime(record.time)}</strong></td>
-                        <td>${standardBadge}</td>
-                        <td>${record.meetName}</td>
-                        <td>${new Date(record.date).toLocaleDateString()}</td>
-                    </tr>
-                `;
-            });
-            
-            if (Object.keys(records).length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #999;">No records yet. Add some swim times!</td></tr>';
+    function updateRecords() {
+        const courseFilter = document.getElementById('recordsCourse').value;
+        const tbody = document.getElementById('recordsBody');
+        
+        let filteredSwims = swims.filter(s => !courseFilter || s.course === courseFilter);
+        
+        // Get best time for each event/course combo
+        const records = {};
+        filteredSwims.forEach(swim => {
+            const key = `${swim.event}-${swim.course}`;
+            if (!records[key] || swim.time < records[key].time) {
+                records[key] = swim;
             }
-        }
-
-        function updateStandards() {
-            const event = document.getElementById('standardsEvent').value;
-            const course = document.getElementById('standardsCourse').value;
-            const content = document.getElementById('standardsContent');
+        });
+        
+        tbody.innerHTML = '';
+        Object.values(records).sort((a, b) => a.event.localeCompare(b.event)).forEach(record => {
+            const standard = getStandard(record.course, record.event, record.time);
+            const standardBadge = standard ? 
+                `<span class="standard-badge standard-${standard}">${standard}</span>` : 
+                '<span style="color: #999;">No Standard</span>';
             
-            if (!event || !course) {
-                content.innerHTML = '<div class="empty-state"><p>Please select an event and course to view standards comparison.</p></div>';
-                return;
-            }
-            
-            const standards = STANDARDS[course][event];
-            const personalBest = swims
-                .filter(s => s.event === event && s.course === course)
-                .sort((a, b) => a.time - b.time)[0];
-            
-            if (!personalBest) {
-                content.innerHTML = '<div class="empty-state"><p>No times recorded for this event yet.</p></div>';
-                return;
-            }
-            
-            const currentStandard = getStandard(course, event, personalBest.time);
-            const nextStandard = getNextStandard(course, event, personalBest.time);
-            
-            let html = `
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>Your Best Time</h3>
-                        <div class="value">${formatTime(personalBest.time)}</div>
-                        <p style="margin-top: 10px; color: #666;">${new Date(personalBest.date).toLocaleDateString()}</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>Current Standard</h3>
-                        <div class="value">${currentStandard ? `<span class="standard-badge standard-${currentStandard}">${currentStandard}</span>` : 'None'}</div>
-                    </div>
-                    ${nextStandard ? `
-                    <div class="stat-card">
-                        <h3>Next Goal: ${nextStandard.level}</h3>
-                        <div class="value">${formatTime(nextStandard.time)}</div>
-                        <p style="margin-top: 10px; color: #e74c3c; font-weight: 600;">Drop ${nextStandard.improvement.toFixed(2)}s</p>
-                    </div>
-                    ` : `
-                    <div class="stat-card">
-                        <h3>Achievement</h3>
-                        <div class="value">🏆</div>
-                        <p style="margin-top: 10px; color: #27ae60;">AAAA Standard!</p>
-                    </div>
-                    `}
-                </div>
-                
-                <h3 style="margin: 30px 0 20px 0;">All Standards for ${event} (${course})</h3>
-                <table class="records-table">
-                    <thead>
-                        <tr>
-                            <th>Level</th>
-                            <th>Time</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${record.event}</strong></td>
+                    <td>${record.course}</td>
+                    <td><strong>${formatTime(record.time)}</strong></td>
+                    <td>${standardBadge}</td>
+                    <td>${record.meetName}</td>
+                    <td>${new Date(record.date).toLocaleDateString()}</td>
+                </tr>
             `;
+        });
+        
+        if (Object.keys(records).length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #999;">No records yet. Add some swim times!</td></tr>';
+        }
+    }
+
+    function updateStandards() {
+        const event = document.getElementById('standardsEvent').value;
+        const course = document.getElementById('standardsCourse').value;
+        const content = document.getElementById('standardsContent');
+        
+        if (!event || !course) {
+            content.innerHTML = '<div class="empty-state"><p>Please select an event and course to view standards comparison.</p></div>';
+            return;
+        }
+        
+        const standards = STANDARDS[course][event];
+        const personalBest = swims
+            .filter(s => s.event === event && s.course === course)
+            .sort((a, b) => a.time - b.time)[0];
+        
+        if (!personalBest) {
+            content.innerHTML = '<div class="empty-state"><p>No times recorded for this event yet.</p></div>';
+            return;
+        }
+        
+        const currentStandard = getStandard(course, event, personalBest.time);
+        const nextStandard = getNextStandard(course, event, personalBest.time);
+        
+        let html = `
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Your Best Time</h3>
+                    <div class="value">${formatTime(personalBest.time)}</div>
+                    <p style="margin-top: 10px; color: #666;">${new Date(personalBest.date).toLocaleDateString()}</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Current Standard</h3>
+                    <div class="value">${currentStandard ? `<span class="standard-badge standard-${currentStandard}">${currentStandard}</span>` : 'None'}</div>
+                </div>
+                ${nextStandard ? `
+                <div class="stat-card">
+                    <h3>Next Goal: ${nextStandard.level}</h3>
+                    <div class="value">${formatTime(nextStandard.time)}</div>
+                    <p style="margin-top: 10px; color: #e74c3c; font-weight: 600;">Drop ${nextStandard.improvement.toFixed(2)}s</p>
+                </div>
+                ` : `
+                <div class="stat-card">
+                    <h3>Achievement</h3>
+                    <div class="value">🏆</div>
+                    <p style="margin-top: 10px; color: #27ae60;">AAAA Standard!</p>
+                </div>
+                `}
+            </div>
             
-            ['AAAA', 'AAA', 'AA', 'A', 'BB', 'B'].forEach(level => {
-                const time = standards[level];
-                const achieved = personalBest.time <= time;
-                html += `
-                    <tr style="${achieved ? 'background: #d4edda;' : ''}">
-                        <td><span class="standard-badge standard-${level}">${level}</span></td>
-                        <td><strong>${formatTime(time)}</strong></td>
-                        <td>${achieved ? '✅ Achieved' : `⏱️ Need ${(personalBest.time - time).toFixed(2)}s drop`}</td>
+            <h3 style="margin: 30px 0 20px 0;">All Standards for ${event} (${course})</h3>
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>Level</th>
+                        <th>Time</th>
+                        <th>Status</th>
                     </tr>
-                `;
-            });
-            
-            html += '</tbody></table>';
-            content.innerHTML = html;
-        }
+                </thead>
+                <tbody>
+        `;
+        
+        ['AAAA', 'AAA', 'AA', 'A', 'BB', 'B'].forEach(level => {
+            const time = standards[level];
+            const achieved = personalBest.time <= time;
+            html += `
+                <tr style="${achieved ? 'background: #d4edda;' : ''}">
+                    <td><span class="standard-badge standard-${level}">${level}</span></td>
+                    <td><strong>${formatTime(time)}</strong></td>
+                    <td>${achieved ? '✅ Achieved' : `⏱️ Need ${(personalBest.time - time).toFixed(2)}s drop`}</td>
+                </tr>
+            `;
+        });
+        
+        html += '</tbody></table>';
+        content.innerHTML = html;
+    }
 
-        function updateHistory() {
-            const eventFilter = document.getElementById('historyEvent').value;
-            const courseFilter = document.getElementById('historyCourse').value;
-            const content = document.getElementById('historyContent');
+    function updateHistory() {
+        const eventFilter = document.getElementById('historyEvent').value;
+        const courseFilter = document.getElementById('historyCourse').value;
+        const content = document.getElementById('historyContent');
+        
+        let filteredSwims = swims.filter(s => {
+            return (!eventFilter || s.event === eventFilter) &&
+                   (!courseFilter || s.course === courseFilter);
+        });
+        
+        filteredSwims.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        if (filteredSwims.length === 0) {
+            content.innerHTML = '<div class="empty-state"><p>No swim times recorded yet.</p></div>';
+            return;
+        }
+        
+        content.innerHTML = filteredSwims.map(swim => {
+            const standard = getStandard(swim.course, swim.event, swim.time);
+            const standardBadge = standard ? 
+                `<span class="standard-badge standard-${standard}">${standard}</span>` : '';
             
-            let filteredSwims = swims.filter(s => {
-                return (!eventFilter || s.event === eventFilter) &&
-                       (!courseFilter || s.course === courseFilter);
-            });
-            
-            filteredSwims.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            if (filteredSwims.length === 0) {
-                content.innerHTML = '<div class="empty-state"><p>No swim times recorded yet.</p></div>';
-                return;
-            }
-            
-            content.innerHTML = filteredSwims.map(swim => {
-                const standard = getStandard(swim.course, swim.event, swim.time);
-                const standardBadge = standard ? 
-                    `<span class="standard-badge standard-${standard}">${standard}</span>` : '';
-                
-                return `
-                    <div class="swim-entry">
-                        <div class="swim-entry-info">
-                            <strong>${swim.event} - ${swim.course}</strong>
-                            <div style="color: #666; margin-top: 5px;">
-                                ${formatTime(swim.time)} ${standardBadge} | ${swim.meetName} | ${new Date(swim.date).toLocaleDateString()}
-                            </div>
+            return `
+                <div class="swim-entry">
+                    <div class="swim-entry-info">
+                        <strong>${swim.event} - ${swim.course}</strong>
+                        <div style="color: #666; margin-top: 5px;">
+                            ${formatTime(swim.time)} ${standardBadge} | ${swim.meetName} | ${new Date(swim.date).toLocaleDateString()}
                         </div>
-                        <button class="delete-btn" onclick="deleteSwim(${swim.id})">Delete</button>
                     </div>
-                `;
-            }).join('');
-        }
+                    <button class="delete-btn" onclick="deleteSwim(${swim.id})">Delete</button>
+                </div>
+            `;
+        }).join('');
+    }
 
-        function deleteSwim(id) {
-            if (confirm('Are you sure you want to delete this swim time?')) {
-                swims = swims.filter(s => s.id !== id);
-                localStorage.setItem('swimData', JSON.stringify(swims));
-                populateEventFilters();
-                updateProgressCharts();
-                updateRecords();
-                updateHistory();
-            }
+    function deleteSwim(id) {
+        if (confirm('Are you sure you want to delete this swim time?')) {
+            swims = swims.filter(s => s.id !== id);
+            localStorage.setItem('swimData', JSON.stringify(swims));
+            populateEventFilters();
+            updateProgressCharts();
+            updateRecords();
+            updateHistory();
         }
-    </script>
+    }
+</script>
+```
+
 </body>
 </html>
