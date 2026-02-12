@@ -598,6 +598,7 @@
                 // Parse swim line: "50y Fly: 55.73 - last 58.39"
                 // or "100y free: 1:36.26 - last 1:41.68"
                 // or with leading dash: "100y free: - 1:36.26 - last 1:41.68"
+                // or without "last": "50y breast: - 49.62"
                 // or with DQ: "100y breast: 1:48.69 - disqualification (1:49.80) - last 1:54.70"
                 
                 // Skip lines with "disqualification" or "DQ"
@@ -605,21 +606,28 @@
                     continue;
                 }
                 
-                // Updated regex to handle optional leading dash/spaces before time
-                const swimMatch = line.match(/(\d+)([ym])\s+(free|fly|back|breast|im)[:\s]+[-\s]*([^-]+?)(?:\s*-\s*last|\s*$)/i);
+                // Match event line - capture everything after the colon
+                const swimMatch = line.match(/(\d+)([ym])\s+(free|fly|back|breast|im)[:\s]+(.+)$/i);
                 if (swimMatch) {
                     const distance = swimMatch[1];
                     const unit = swimMatch[2].toLowerCase();
                     const stroke = swimMatch[3];
                     let timeStr = swimMatch[4].trim();
                     
-                    // Remove any leading dashes and spaces
-                    timeStr = timeStr.replace(/^[-\s]+/, '');
-                    
                     // Only process if it's yards (y) or meters (m) matching our course
-                    // Skip if unit doesn't match course (y=SCY, m=LCM)
                     const expectedUnit = currentMeet.course === 'SCY' ? 'y' : 'm';
                     if (unit !== expectedUnit) continue;
+                    
+                    // Remove leading dashes and spaces
+                    timeStr = timeStr.replace(/^[-\s]+/, '');
+                    
+                    // Extract first time (before "last" if it exists)
+                    if (timeStr.includes('last')) {
+                        timeStr = timeStr.split(/\s*-?\s*last/i)[0].trim();
+                    }
+                    
+                    // Remove any trailing dashes
+                    timeStr = timeStr.replace(/\s*-\s*$/, '').trim();
                     
                     const time = parseFreeformTime(timeStr);
                     if (time === null) continue;
