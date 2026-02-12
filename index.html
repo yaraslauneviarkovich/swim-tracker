@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Swim Meet Tracker - 10 & Under</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            background: transparent;
+            font-size: 1em;
+        }
+
+        .tab:hover {
+            background: #e0e0e0;
+        }
+
+        .tab.active {
+            background: white;
+            color: #2a5298;
+            border-bottom: 3px solid #2a5298;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-card h3 {
+            color: #2a5298;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .records-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .records-table th,
+        .records-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .records-table th {
+            background: #2a5298;
+            color: white;
+            font-weight: 600;
+        }
+
+        .records-table tr:hover {
+            background: #f5f5f5;
+        }
+
+        .standard-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: white;
+        }
+
+        .standard-B { background: #95a5a6; }
+        .standard-BB { background: #3498db; }
+        .standard-A { background: #2ecc71; }
+        .standard-AA { background: #f39c12; }
+        .standard-AAA { background: #e74c3c; }
+        .standard-AAAA { background: #9b59b6; }
+
+        .swim-entry {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .swim-entry-info {
+            flex: 1;
+        }
+
+        .swim-entry-info strong {
+            color: #2a5298;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .filter-controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-controls select {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏊‍♂️ Swim Meet Tracker</h1>
+            <p>10 & Under | USA Swimming Standards 2024-2028</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('entry')">Add Swim</button>
+            <button class="tab" onclick="switchTab('progress')">Progress Charts</button>
+            <button class="tab" onclick="switchTab('records')">Personal Records</button>
+            <button class="tab" onclick="switchTab('standards')">Standards Comparison</button>
+            <button class="tab" onclick="switchTab('history')">Swim History</button>
+        </div>
+
+        <!-- Entry Tab -->
+        <div id="entry" class="tab-content active">
+            <h2 style="margin-bottom: 20px;">Add New Swim Time</h2>
+            <form id="swimForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="meetDate">Meet Date</label>
+                        <input type="date" id="meetDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="meetName">Meet Name</label>
+                        <input type="text" id="meetName" placeholder="e.g., Winter Championships" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="course">Course</label>
+                        <select id="course" required>
+                            <option value="">Select Course</option>
+                            <option value="SCM">SCM (Short Course Meters)</option>
+                            <option value="LCM">LCM (Long Course Meters)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="event">Event</label>
+                        <select id="event" required>
+                            <option value="">Select Event</option>
+                            <option value="50 Free">50 Free</option>
+                            <option value="100 Free">100 Free</option>
+                            <option value="200 Free">200 Free</option>
+                            <option value="400 Free">400 Free</option>
+                            <option value="800 Free">800 Free</option>
+                            <option value="50 Back">50 Back</option>
+                            <option value="100 Back">100 Back</option>
+                            <option value="200 Back">200 Back</option>
+                            <option value="50 Breast">50 Breast</option>
+                            <option value="100 Breast">100 Breast</option>
+                            <option value="200 Breast">200 Breast</option>
+                            <option value="50 Fly">50 Fly</option>
+                            <option value="100 Fly">100 Fly</option>
+                            <option value="200 Fly">200 Fly</option>
+                            <option value="100 IM">100 IM</option>
+                            <option value="200 IM">200 IM</option>
+                            <option value="400 IM">400 IM</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="minutes">Minutes</label>
+                        <input type="number" id="minutes" min="0" max="59" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="seconds">Seconds</label>
+                        <input type="number" id="seconds" min="0" max="59" step="0.01" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn">Add Swim Time</button>
+            </form>
+        </div>
+
+        <!-- Progress Tab -->
+        <div id="progress" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Progress Over Time</h2>
+            <div class="filter-controls">
+                <select id="progressEvent" onchange="updateProgressCharts()">
+                    <option value="">All Events</option>
+                </select>
+                <select id="progressCourse" onchange="updateProgressCharts()">
+                    <option value="">All Courses</option>
+                    <option value="SCM">SCM Only</option>
+                    <option value="LCM">LCM Only</option>
+                </select>
+            </div>
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+            <h3 style="margin-top: 30px; margin-bottom: 20px;">Speed Analysis (meters per second)</h3>
+            <div class="chart-container">
+                <canvas id="speedChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Records Tab -->
+        <div id="records" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Personal Records</h2>
+            <div class="filter-controls">
+                <select id="recordsCourse" onchange="updateRecords()">
+                    <option value="">All Courses</option>
+                    <option value="SCM">SCM Only</option>
+                    <option value="LCM">LCM Only</option>
+                </select>
+            </div>
+            <table class="records-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>Course</th>
+                        <th>Best Time</th>
+                        <th>Standard</th>
+                        <th>Meet</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="recordsBody">
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Standards Tab -->
+        <div id="standards" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Standards Comparison</h2>
+            <div class="filter-controls">
+                <select id="standardsEvent" onchange="updateStandards()">
+                    <option value="">Select Event</option>
+                </select>
+                <select id="standardsCourse" onchange="updateStandards()">
+                    <option value="">Select Course</option>
+                    <option value="SCM">SCM</option>
+                    <option value="LCM">LCM</option>
+                </select>
+            </div>
+            <div id="standardsContent"></div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="history" class="tab-content">
+            <h2 style="margin-bottom: 20px;">All Swim Times</h2>
+            <div class="filter-controls">
+                <select id="historyEvent" onchange="updateHistory()">
+                    <option value="">All Events</option>
+                </select>
+                <select id="historyCourse" onchange="updateHistory()">
+                    <option value="">All Courses</option>
+                    <option value="SCM">SCM Only</option>
+                    <option value="LCM">LCM Only</option>
+                </select>
+            </div>
+            <div id="historyContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // USA Swimming 2024-2028 Motivational Standards for 10 & Under
+        const STANDARDS = {
+            "SCM": {
+                "50 Free": { "AAAA": 31.79, "AAA": 33.09, "AA": 34.69, "A": 36.79, "BB": 40.39, "B": 45.19 },
+                "100 Free": { "AAAA": 69.59, "AAA": 72.59, "AA": 76.39, "A": 81.19, "BB": 89.59, "B": 100.89 },
+                "200 Free": { "AAAA": 152.59, "AAA": 159.39, "AA": 167.99, "A": 179.19, "BB": 199.69, "B": 226.49 },
+                "400 Free": { "AAAA": 318.69, "AAA": 333.79, "AA": 352.29, "A": 377.29, "BB": 423.89, "B": 484.69 },
+                "800 Free": { "AAAA": 663.79, "AAA": 696.09, "AA": 736.19, "A": 790.89, "BB": 895.69, "B": 1033.49 },
+                "50 Back": { "AAAA": 36.99, "AAA": 38.59, "AA": 40.59, "A": 43.19, "BB": 47.79, "B": 53.99 },
+                "100 Back": { "AAAA": 80.69, "AAA": 84.39, "AA": 89.09, "A": 95.19, "BB": 106.39, "B": 121.59 },
+                "200 Back": { "AAAA": 177.49, "AAA": 185.79, "AA": 196.69, "A": 211.19, "BB": 238.19, "B": 276.29 },
+                "50 Breast": { "AAAA": 42.49, "AAA": 44.39, "AA": 46.79, "A": 49.99, "BB": 55.69, "B": 63.39 },
+                "100 Breast": { "AAAA": 92.19, "AAA": 96.49, "AA": 102.19, "A": 109.79, "BB": 123.59, "B": 142.69 },
+                "200 Breast": { "AAAA": 201.29, "AAA": 210.89, "AA": 223.59, "A": 240.99, "BB": 273.39, "B": 319.89 },
+                "50 Fly": { "AAAA": 35.89, "AAA": 37.49, "AA": 39.59, "A": 42.29, "BB": 47.09, "B": 53.69 },
+                "100 Fly": { "AAAA": 80.89, "AAA": 84.69, "AA": 89.69, "A": 96.29, "BB": 108.69, "B": 126.09 },
+                "200 Fly": { "AAAA": 181.89, "AAA": 190.59, "AA": 202.09, "A": 217.69, "BB": 247.39, "B": 290.99 },
+                "100 IM": { "AAAA": 78.79, "AAA": 82.39, "AA": 87.09, "A": 93.39, "BB": 104.99, "B": 120.79 },
+                "200 IM": { "AAAA": 172.59, "AAA": 180.69, "AA": 191.49, "A": 206.09, "BB": 233.49, "B": 272.09 },
+                "400 IM": { "AAAA": 368.09, "AAA": 386.09, "AA": 409.59, "A": 441.69, "BB": 503.79, "B": 594.69 }
+            },
+            "LCM": {
+                "50 Free": { "AAAA": 33.29, "AAA": 34.69, "AA": 36.39, "A": 38.69, "BB": 42.59, "B": 47.79 },
+                "100 Free": { "AAAA": 72.79, "AAA": 76.09, "AA": 80.19, "A": 85.59, "BB": 94.79, "B": 107.39 },
+                "200 Free": { "AAAA": 159.79, "AAA": 167.19, "AA": 176.59, "A": 189.39, "BB": 211.99, "B": 242.19 },
+                "400 Free": { "AAAA": 333.49, "AAA": 349.79, "AA": 370.19, "A": 398.49, "BB": 450.89, "B": 521.09 },
+                "800 Free": { "AAAA": 693.89, "AAA": 728.39, "AA": 772.09, "A": 831.99, "BB": 947.89, "B": 1104.79 },
+                "50 Back": { "AAAA": 38.79, "AAA": 40.49, "AA": 42.69, "A": 45.59, "BB": 50.69, "B": 57.69 },
+                "100 Back": { "AAAA": 84.59, "AAA": 88.59, "AA": 93.69, "A": 100.49, "BB": 112.79, "B": 129.79 },
+                "200 Back": { "AAAA": 185.99, "AAA": 195.09, "AA": 206.89, "A": 222.69, "BB": 252.29, "B": 294.99 },
+                "50 Breast": { "AAAA": 44.59, "AAA": 46.69, "AA": 49.29, "A": 52.79, "BB": 58.99, "B": 67.49 },
+                "100 Breast": { "AAAA": 96.59, "AAA": 101.19, "AA": 107.29, "A": 115.49, "BB": 130.39, "B": 151.39 },
+                "200 Breast": { "AAAA": 210.89, "AAA": 221.19, "AA": 234.79, "A": 253.49, "BB": 288.49, "B": 339.69 },
+                "50 Fly": { "AAAA": 37.59, "AAA": 39.29, "AA": 41.59, "A": 44.59, "BB": 49.89, "B": 57.19 },
+                "100 Fly": { "AAAA": 84.79, "AAA": 88.89, "AA": 94.29, "A": 101.49, "BB": 114.89, "B": 133.79 },
+                "200 Fly": { "AAAA": 190.59, "AAA": 199.99, "AA": 212.39, "A": 229.19, "BB": 261.39, "B": 309.79 },
+                "100 IM": { "AAAA": 82.59, "AAA": 86.49, "AA": 91.59, "A": 98.49, "BB": 111.09, "B": 128.49 },
+                "200 IM": { "AAAA": 180.89, "AAA": 189.69, "AA": 201.29, "A": 217.09, "BB": 247.09, "B": 290.49 },
+                "400 IM": { "AAAA": 385.69, "AAA": 404.99, "AA": 430.09, "A": 464.49, "BB": 531.99, "B": 633.89 }
+            }
+        };
+
+        let swims = JSON.parse(localStorage.getItem('swimData')) || [];
+        let progressChart = null;
+        let speedChart = null;
+
+        // Initialize
+        document.getElementById('meetDate').valueAsDate = new Date();
+        populateEventFilters();
+        updateProgressCharts();
+        updateRecords();
+        updateHistory();
+
+        // Form submission
+        document.getElementById('swimForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const minutes = parseInt(document.getElementById('minutes').value);
+            const seconds = parseFloat(document.getElementById('seconds').value);
+            const totalSeconds = minutes * 60 + seconds;
+            
+            const swim = {
+                id: Date.now(),
+                date: document.getElementById('meetDate').value,
+                meetName: document.getElementById('meetName').value,
+                course: document.getElementById('course').value,
+                event: document.getElementById('event').value,
+                time: totalSeconds
+            };
+            
+            swims.push(swim);
+            localStorage.setItem('swimData', JSON.stringify(swims));
+            
+            this.reset();
+            document.getElementById('meetDate').valueAsDate = new Date();
+            
+            alert('Swim time added successfully!');
+            populateEventFilters();
+            updateProgressCharts();
+            updateRecords();
+            updateHistory();
+        });
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            if (tabName === 'progress') updateProgressCharts();
+            if (tabName === 'records') updateRecords();
+            if (tabName === 'standards') updateStandards();
+            if (tabName === 'history') updateHistory();
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = (seconds % 60).toFixed(2);
+            return mins > 0 ? `${mins}:${secs.padStart(5, '0')}` : `${secs}`;
+        }
+
+        function getStandard(course, event, time) {
+            const standards = STANDARDS[course]?.[event];
+            if (!standards) return null;
+            
+            if (time <= standards.AAAA) return 'AAAA';
+            if (time <= standards.AAA) return 'AAA';
+            if (time <= standards.AA) return 'AA';
+            if (time <= standards.A) return 'A';
+            if (time <= standards.BB) return 'BB';
+            if (time <= standards.B) return 'B';
+            return null;
+        }
+
+        function getNextStandard(course, event, time) {
+            const standards = STANDARDS[course]?.[event];
+            if (!standards) return null;
+            
+            const levels = ['B', 'BB', 'A', 'AA', 'AAA', 'AAAA'];
+            for (let level of levels) {
+                if (time > standards[level]) {
+                    return { level, time: standards[level], improvement: time - standards[level] };
+                }
+            }
+            return null;
+        }
+
+        function populateEventFilters() {
+            const events = [...new Set(swims.map(s => s.event))].sort();
+            
+            ['progressEvent', 'historyEvent', 'standardsEvent'].forEach(id => {
+                const select = document.getElementById(id);
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">All Events</option>';
+                events.forEach(event => {
+                    select.innerHTML += `<option value="${event}">${event}</option>`;
+                });
+                select.value = currentValue;
+            });
+        }
+
+        function updateProgressCharts() {
+            const eventFilter = document.getElementById('progressEvent').value;
+            const courseFilter = document.getElementById('progressCourse').value;
+            
+            let filteredSwims = swims.filter(s => {
+                return (!eventFilter || s.event === eventFilter) &&
+                       (!courseFilter || s.course === courseFilter);
+            });
+            
+            filteredSwims.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            const ctx1 = document.getElementById('progressChart').getContext('2d');
+            const ctx2 = document.getElementById('speedChart').getContext('2d');
+            
+            if (progressChart) progressChart.destroy();
+            if (speedChart) speedChart.destroy();
+            
+            if (filteredSwims.length === 0) {
+                return;
+            }
+            
+            // Group by event for multiple lines
+            const eventGroups = {};
+            filteredSwims.forEach(swim => {
+                const key = `${swim.event} (${swim.course})`;
+                if (!eventGroups[key]) eventGroups[key] = [];
+                eventGroups[key].push(swim);
+            });
+            
+            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
+            
+            const datasets = Object.keys(eventGroups).map((key, idx) => ({
+                label: key,
+                data: eventGroups[key].map(s => ({ x: s.date, y: s.time })),
+                borderColor: colors[idx % colors.length],
+                backgroundColor: colors[idx % colors.length] + '33',
+                tension: 0.4,
+                fill: false
+            }));
+            
+            progressChart = new Chart(ctx1, {
+                type: 'line',
+                data: { datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Time Progress (Lower is Better)', font: { size: 16 } },
+                        legend: { display: true }
+                    },
+                    scales: {
+                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                        y: { 
+                            reverse: true,
+                            title: { display: true, text: 'Time (seconds)' },
+                            ticks: { callback: value => formatTime(value) }
+                        }
+                    }
+                }
+            });
+            
+            // Speed chart
+            const speedDatasets = Object.keys(eventGroups).map((key, idx) => {
+                const event = eventGroups[key][0].event;
+                const distance = parseInt(event.split(' ')[0]);
+                return {
+                    label: key,
+                    data: eventGroups[key].map(s => ({ 
+                        x: s.date, 
+                        y: distance / s.time 
+                    })),
+                    borderColor: colors[idx % colors.length],
+                    backgroundColor: colors[idx % colors.length] + '33',
+                    tension: 0.4,
+                    fill: false
+                };
+            });
+            
+            speedChart = new Chart(ctx2, {
+                type: 'line',
+                data: { datasets: speedDatasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Speed Progress (Higher is Better)', font: { size: 16 } },
+                        legend: { display: true }
+                    },
+                    scales: {
+                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                        y: { 
+                            title: { display: true, text: 'Speed (m/s)' },
+                            ticks: { callback: value => value.toFixed(2) }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateRecords() {
+            const courseFilter = document.getElementById('recordsCourse').value;
+            const tbody = document.getElementById('recordsBody');
+            
+            let filteredSwims = swims.filter(s => !courseFilter || s.course === courseFilter);
+            
+            // Get best time for each event/course combo
+            const records = {};
+            filteredSwims.forEach(swim => {
+                const key = `${swim.event}-${swim.course}`;
+                if (!records[key] || swim.time < records[key].time) {
+                    records[key] = swim;
+                }
+            });
+            
+            tbody.innerHTML = '';
+            Object.values(records).sort((a, b) => a.event.localeCompare(b.event)).forEach(record => {
+                const standard = getStandard(record.course, record.event, record.time);
+                const standardBadge = standard ? 
+                    `<span class="standard-badge standard-${standard}">${standard}</span>` : 
+                    '<span style="color: #999;">No Standard</span>';
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${record.event}</strong></td>
+                        <td>${record.course}</td>
+                        <td><strong>${formatTime(record.time)}</strong></td>
+                        <td>${standardBadge}</td>
+                        <td>${record.meetName}</td>
+                        <td>${new Date(record.date).toLocaleDateString()}</td>
+                    </tr>
+                `;
+            });
+            
+            if (Object.keys(records).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: #999;">No records yet. Add some swim times!</td></tr>';
+            }
+        }
+
+        function updateStandards() {
+            const event = document.getElementById('standardsEvent').value;
+            const course = document.getElementById('standardsCourse').value;
+            const content = document.getElementById('standardsContent');
+            
+            if (!event || !course) {
+                content.innerHTML = '<div class="empty-state"><p>Please select an event and course to view standards comparison.</p></div>';
+                return;
+            }
+            
+            const standards = STANDARDS[course][event];
+            const personalBest = swims
+                .filter(s => s.event === event && s.course === course)
+                .sort((a, b) => a.time - b.time)[0];
+            
+            if (!personalBest) {
+                content.innerHTML = '<div class="empty-state"><p>No times recorded for this event yet.</p></div>';
+                return;
+            }
+            
+            const currentStandard = getStandard(course, event, personalBest.time);
+            const nextStandard = getNextStandard(course, event, personalBest.time);
+            
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Your Best Time</h3>
+                        <div class="value">${formatTime(personalBest.time)}</div>
+                        <p style="margin-top: 10px; color: #666;">${new Date(personalBest.date).toLocaleDateString()}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Current Standard</h3>
+                        <div class="value">${currentStandard ? `<span class="standard-badge standard-${currentStandard}">${currentStandard}</span>` : 'None'}</div>
+                    </div>
+                    ${nextStandard ? `
+                    <div class="stat-card">
+                        <h3>Next Goal: ${nextStandard.level}</h3>
+                        <div class="value">${formatTime(nextStandard.time)}</div>
+                        <p style="margin-top: 10px; color: #e74c3c; font-weight: 600;">Drop ${nextStandard.improvement.toFixed(2)}s</p>
+                    </div>
+                    ` : `
+                    <div class="stat-card">
+                        <h3>Achievement</h3>
+                        <div class="value">🏆</div>
+                        <p style="margin-top: 10px; color: #27ae60;">AAAA Standard!</p>
+                    </div>
+                    `}
+                </div>
+                
+                <h3 style="margin: 30px 0 20px 0;">All Standards for ${event} (${course})</h3>
+                <table class="records-table">
+                    <thead>
+                        <tr>
+                            <th>Level</th>
+                            <th>Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            ['AAAA', 'AAA', 'AA', 'A', 'BB', 'B'].forEach(level => {
+                const time = standards[level];
+                const achieved = personalBest.time <= time;
+                html += `
+                    <tr style="${achieved ? 'background: #d4edda;' : ''}">
+                        <td><span class="standard-badge standard-${level}">${level}</span></td>
+                        <td><strong>${formatTime(time)}</strong></td>
+                        <td>${achieved ? '✅ Achieved' : `⏱️ Need ${(personalBest.time - time).toFixed(2)}s drop`}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            content.innerHTML = html;
+        }
+
+        function updateHistory() {
+            const eventFilter = document.getElementById('historyEvent').value;
+            const courseFilter = document.getElementById('historyCourse').value;
+            const content = document.getElementById('historyContent');
+            
+            let filteredSwims = swims.filter(s => {
+                return (!eventFilter || s.event === eventFilter) &&
+                       (!courseFilter || s.course === courseFilter);
+            });
+            
+            filteredSwims.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            if (filteredSwims.length === 0) {
+                content.innerHTML = '<div class="empty-state"><p>No swim times recorded yet.</p></div>';
+                return;
+            }
+            
+            content.innerHTML = filteredSwims.map(swim => {
+                const standard = getStandard(swim.course, swim.event, swim.time);
+                const standardBadge = standard ? 
+                    `<span class="standard-badge standard-${standard}">${standard}</span>` : '';
+                
+                return `
+                    <div class="swim-entry">
+                        <div class="swim-entry-info">
+                            <strong>${swim.event} - ${swim.course}</strong>
+                            <div style="color: #666; margin-top: 5px;">
+                                ${formatTime(swim.time)} ${standardBadge} | ${swim.meetName} | ${new Date(swim.date).toLocaleDateString()}
+                            </div>
+                        </div>
+                        <button class="delete-btn" onclick="deleteSwim(${swim.id})">Delete</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteSwim(id) {
+            if (confirm('Are you sure you want to delete this swim time?')) {
+                swims = swims.filter(s => s.id !== id);
+                localStorage.setItem('swimData', JSON.stringify(swims));
+                populateEventFilters();
+                updateProgressCharts();
+                updateRecords();
+                updateHistory();
+            }
+        }
+    </script>
+</body>
+</html>
