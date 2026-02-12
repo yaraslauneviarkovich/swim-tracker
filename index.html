@@ -294,10 +294,42 @@
 
         <div class="tabs">
             <button class="tab active" onclick="switchTab('entry')">Add Swim</button>
+            <button class="tab" onclick="switchTab('bulk')">Bulk Import</button>
             <button class="tab" onclick="switchTab('progress')">Progress Charts</button>
             <button class="tab" onclick="switchTab('records')">Personal Records</button>
             <button class="tab" onclick="switchTab('standards')">Standards Comparison</button>
             <button class="tab" onclick="switchTab('history')">Swim History</button>
+        </div>
+
+        <!-- Bulk Import Tab -->
+        <div id="bulk" class="tab-content">
+            <h2 style="margin-bottom: 20px;">Bulk Import from Text</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                Paste your swim meet results and we'll automatically parse them. Format example:
+            </p>
+            <div style="background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-family: monospace; font-size: 0.9em;">
+                Short course (Addison, 7 Feb 2026)<br>
+                50y Fly: 55.73 - last 58.39<br>
+                100y free: 1:36.26 - last 1:41.68<br>
+                100y IM: 1:44.76 - last 1:46.40
+            </div>
+            
+            <form id="bulkForm">
+                <div class="form-group">
+                    <label for="bulkText">Paste Meet Results</label>
+                    <textarea id="bulkText" rows="12" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: monospace; font-size: 0.95em;" placeholder="Paste your meet results here..."></textarea>
+                </div>
+                
+                <div id="bulkPreview" style="display: none; margin: 20px 0; padding: 20px; background: #e8f5e9; border-radius: 8px; border: 2px solid #4caf50;">
+                    <h3 style="color: #2e7d32; margin-bottom: 15px;">Preview - Found <span id="previewCount">0</span> swims:</h3>
+                    <div id="previewContent"></div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button type="button" class="btn" onclick="previewBulkImport()" style="flex: 1;">Preview Import</button>
+                    <button type="submit" class="btn" style="flex: 1; background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);">Import All</button>
+                </div>
+            </form>
         </div>
 
         <!-- Entry Tab -->
@@ -320,7 +352,7 @@
                         <label for="course">Course</label>
                         <select id="course" required>
                             <option value="">Select Course</option>
-                            <option value="SCM">SCM (Short Course Meters)</option>
+                            <option value="SCY">SCY (Short Course Yards)</option>
                             <option value="LCM">LCM (Long Course Meters)</option>
                         </select>
                     </div>
@@ -349,15 +381,41 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-group">
+                    <label>Time Entry Method</label>
+                    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="timeMethod" value="separate" checked onchange="toggleTimeInput()">
+                            <span>Separate Fields</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
+                            <input type="radio" name="timeMethod" value="freeform" onchange="toggleTimeInput()">
+                            <span>Free-form Text</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="separateFields" class="form-row">
                     <div class="form-group">
                         <label for="minutes">Minutes</label>
-                        <input type="number" id="minutes" min="0" max="59" value="0" required>
+                        <input type="number" id="minutes" min="0" max="59" value="0">
                     </div>
                     <div class="form-group">
                         <label for="seconds">Seconds</label>
-                        <input type="number" id="seconds" min="0" max="59" step="0.01" required>
+                        <input type="number" id="seconds" min="0" max="59" value="0">
                     </div>
+                    <div class="form-group">
+                        <label for="milliseconds">Hundredths (00-99)</label>
+                        <input type="number" id="milliseconds" min="0" max="99" value="0">
+                    </div>
+                </div>
+
+                <div id="freeformField" class="form-group" style="display: none;">
+                    <label for="freeformTime">Time (e.g., 1:23.45, 32.18, 2:15.3)</label>
+                    <input type="text" id="freeformTime" placeholder="Examples: 1:23.45 or 32.18 or 2:15.3">
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Accepts: mm:ss.ms, ss.ms, m:ss.ms (periods or colons work)
+                    </small>
                 </div>
 
                 <button type="submit" class="btn">Add Swim Time</button>
@@ -373,7 +431,7 @@
                 </select>
                 <select id="progressCourse" onchange="updateProgressCharts()">
                     <option value="">All Courses</option>
-                    <option value="SCM">SCM Only</option>
+                    <option value="SCY">SCY Only</option>
                     <option value="LCM">LCM Only</option>
                 </select>
             </div>
@@ -392,7 +450,7 @@
             <div class="filter-controls">
                 <select id="recordsCourse" onchange="updateRecords()">
                     <option value="">All Courses</option>
-                    <option value="SCM">SCM Only</option>
+                    <option value="SCY">SCY Only</option>
                     <option value="LCM">LCM Only</option>
                 </select>
             </div>
@@ -421,7 +479,7 @@
                 </select>
                 <select id="standardsCourse" onchange="updateStandards()">
                     <option value="">Select Course</option>
-                    <option value="SCM">SCM</option>
+                    <option value="SCY">SCY</option>
                     <option value="LCM">LCM</option>
                 </select>
             </div>
@@ -437,7 +495,7 @@
                 </select>
                 <select id="historyCourse" onchange="updateHistory()">
                     <option value="">All Courses</option>
-                    <option value="SCM">SCM Only</option>
+                    <option value="SCY">SCY Only</option>
                     <option value="LCM">LCM Only</option>
                 </select>
             </div>
@@ -448,24 +506,24 @@
     <script>
         // USA Swimming 2024-2028 Motivational Standards for 10 & Under
         const STANDARDS = {
-            "SCM": {
-                "50 Free": { "AAAA": 31.79, "AAA": 33.09, "AA": 34.69, "A": 36.79, "BB": 40.39, "B": 45.19 },
-                "100 Free": { "AAAA": 69.59, "AAA": 72.59, "AA": 76.39, "A": 81.19, "BB": 89.59, "B": 100.89 },
-                "200 Free": { "AAAA": 152.59, "AAA": 159.39, "AA": 167.99, "A": 179.19, "BB": 199.69, "B": 226.49 },
-                "400 Free": { "AAAA": 318.69, "AAA": 333.79, "AA": 352.29, "A": 377.29, "BB": 423.89, "B": 484.69 },
-                "800 Free": { "AAAA": 663.79, "AAA": 696.09, "AA": 736.19, "A": 790.89, "BB": 895.69, "B": 1033.49 },
-                "50 Back": { "AAAA": 36.99, "AAA": 38.59, "AA": 40.59, "A": 43.19, "BB": 47.79, "B": 53.99 },
-                "100 Back": { "AAAA": 80.69, "AAA": 84.39, "AA": 89.09, "A": 95.19, "BB": 106.39, "B": 121.59 },
-                "200 Back": { "AAAA": 177.49, "AAA": 185.79, "AA": 196.69, "A": 211.19, "BB": 238.19, "B": 276.29 },
-                "50 Breast": { "AAAA": 42.49, "AAA": 44.39, "AA": 46.79, "A": 49.99, "BB": 55.69, "B": 63.39 },
-                "100 Breast": { "AAAA": 92.19, "AAA": 96.49, "AA": 102.19, "A": 109.79, "BB": 123.59, "B": 142.69 },
-                "200 Breast": { "AAAA": 201.29, "AAA": 210.89, "AA": 223.59, "A": 240.99, "BB": 273.39, "B": 319.89 },
-                "50 Fly": { "AAAA": 35.89, "AAA": 37.49, "AA": 39.59, "A": 42.29, "BB": 47.09, "B": 53.69 },
-                "100 Fly": { "AAAA": 80.89, "AAA": 84.69, "AA": 89.69, "A": 96.29, "BB": 108.69, "B": 126.09 },
-                "200 Fly": { "AAAA": 181.89, "AAA": 190.59, "AA": 202.09, "A": 217.69, "BB": 247.39, "B": 290.99 },
-                "100 IM": { "AAAA": 78.79, "AAA": 82.39, "AA": 87.09, "A": 93.39, "BB": 104.99, "B": 120.79 },
-                "200 IM": { "AAAA": 172.59, "AAA": 180.69, "AA": 191.49, "A": 206.09, "BB": 233.49, "B": 272.09 },
-                "400 IM": { "AAAA": 368.09, "AAA": 386.09, "AA": 409.59, "A": 441.69, "BB": 503.79, "B": 594.69 }
+            "SCY": {
+                "50 Free": { "AAAA": 29.49, "AAA": 30.79, "AA": 32.29, "A": 34.29, "BB": 37.69, "B": 42.19 },
+                "100 Free": { "AAAA": 64.69, "AAA": 67.59, "AA": 71.09, "A": 75.69, "BB": 83.59, "B": 94.19 },
+                "200 Free": { "AAAA": 142.09, "AAA": 148.59, "AA": 156.69, "A": 167.29, "BB": 186.89, "B": 212.29 },
+                "500 Free": { "AAAA": 391.39, "AAA": 410.29, "AA": 433.49, "A": 464.79, "BB": 522.39, "B": 598.69 },
+                "1000 Free": { "AAAA": 818.49, "AAA": 858.79, "AA": 907.59, "A": 974.59, "BB": 1098.89, "B": 1268.69 },
+                "50 Back": { "AAAA": 34.39, "AAA": 35.99, "AA": 37.89, "A": 40.29, "BB": 44.69, "B": 50.59 },
+                "100 Back": { "AAAA": 75.09, "AAA": 78.69, "AA": 83.09, "A": 88.89, "BB": 99.49, "B": 113.89 },
+                "200 Back": { "AAAA": 165.49, "AAA": 173.39, "AA": 183.49, "A": 197.09, "BB": 222.49, "B": 258.49 },
+                "50 Breast": { "AAAA": 39.49, "AAA": 41.39, "AA": 43.69, "A": 46.69, "BB": 52.09, "B": 59.39 },
+                "100 Breast": { "AAAA": 85.89, "AAA": 90.09, "AA": 95.49, "A": 102.69, "BB": 115.79, "B": 133.89 },
+                "200 Breast": { "AAAA": 187.89, "AAA": 197.09, "AA": 209.09, "A": 225.49, "BB": 255.79, "B": 299.49 },
+                "50 Fly": { "AAAA": 33.39, "AAA": 34.99, "AA": 36.99, "A": 39.49, "BB": 44.09, "B": 50.29 },
+                "100 Fly": { "AAAA": 75.49, "AAA": 79.19, "AA": 83.89, "A": 90.09, "BB": 101.69, "B": 117.99 },
+                "200 Fly": { "AAAA": 169.79, "AAA": 178.19, "AA": 188.99, "A": 203.69, "BB": 231.49, "B": 272.29 },
+                "100 IM": { "AAAA": 73.49, "AAA": 77.09, "AA": 81.69, "A": 87.69, "BB": 98.79, "B": 113.89 },
+                "200 IM": { "AAAA": 161.09, "AAA": 169.09, "AA": 179.29, "A": 193.09, "BB": 218.89, "B": 255.39 },
+                "400 IM": { "AAAA": 343.99, "AAA": 361.09, "AA": 383.09, "A": 413.19, "BB": 471.59, "B": 557.19 }
             },
             "LCM": {
                 "50 Free": { "AAAA": 33.29, "AAA": 34.69, "AA": 36.39, "A": 38.69, "BB": 42.59, "B": 47.79 },
@@ -473,6 +531,7 @@
                 "200 Free": { "AAAA": 159.79, "AAA": 167.19, "AA": 176.59, "A": 189.39, "BB": 211.99, "B": 242.19 },
                 "400 Free": { "AAAA": 333.49, "AAA": 349.79, "AA": 370.19, "A": 398.49, "BB": 450.89, "B": 521.09 },
                 "800 Free": { "AAAA": 693.89, "AAA": 728.39, "AA": 772.09, "A": 831.99, "BB": 947.89, "B": 1104.79 },
+                "1500 Free": { "AAAA": 1314.39, "AAA": 1380.29, "AA": 1462.79, "A": 1578.49, "BB": 1799.79, "B": 2107.99 },
                 "50 Back": { "AAAA": 38.79, "AAA": 40.49, "AA": 42.69, "A": 45.59, "BB": 50.69, "B": 57.69 },
                 "100 Back": { "AAAA": 84.59, "AAA": 88.59, "AA": 93.69, "A": 100.49, "BB": 112.79, "B": 129.79 },
                 "200 Back": { "AAAA": 185.99, "AAA": 195.09, "AA": 206.89, "A": 222.69, "BB": 252.29, "B": 294.99 },
@@ -482,7 +541,6 @@
                 "50 Fly": { "AAAA": 37.59, "AAA": 39.29, "AA": 41.59, "A": 44.59, "BB": 49.89, "B": 57.19 },
                 "100 Fly": { "AAAA": 84.79, "AAA": 88.89, "AA": 94.29, "A": 101.49, "BB": 114.89, "B": 133.79 },
                 "200 Fly": { "AAAA": 190.59, "AAA": 199.99, "AA": 212.39, "A": 229.19, "BB": 261.39, "B": 309.79 },
-                "100 IM": { "AAAA": 82.59, "AAA": 86.49, "AA": 91.59, "A": 98.49, "BB": 111.09, "B": 128.49 },
                 "200 IM": { "AAAA": 180.89, "AAA": 189.69, "AA": 201.29, "A": 217.09, "BB": 247.09, "B": 290.49 },
                 "400 IM": { "AAAA": 385.69, "AAA": 404.99, "AA": 430.09, "A": 464.49, "BB": 531.99, "B": 633.89 }
             }
@@ -491,6 +549,252 @@
         let swims = JSON.parse(localStorage.getItem('swimData')) || [];
         let progressChart = null;
         let speedChart = null;
+        let bulkParsedSwims = [];
+
+        // Bulk import parser
+        function parseBulkText(text) {
+            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            const swims = [];
+            let currentMeet = { name: '', date: '', course: '' };
+            
+            for (let line of lines) {
+                // Check for course/meet line: "Short course (Addison, 7 Feb 2026)"
+                const meetMatch = line.match(/(short\s+course|long\s+course)\s*\(([^,]+),\s*(.+?)\)/i);
+                if (meetMatch) {
+                    const courseType = meetMatch[1].toLowerCase().includes('short') ? 'SCY' : 'LCM';
+                    const location = meetMatch[2].trim();
+                    const dateStr = meetMatch[3].trim();
+                    
+                    currentMeet = {
+                        course: courseType,
+                        name: location,
+                        date: parseDate(dateStr)
+                    };
+                    continue;
+                }
+                
+                // Parse swim line: "50y Fly: 55.73 - last 58.39"
+                // or "100y free: 1:36.26 - last 1:41.68"
+                // or with DQ: "100y breast: 1:48.69 - disqualification (1:49.80) - last 1:54.70"
+                
+                // Skip lines with "disqualification" or "DQ"
+                if (line.match(/disqualification|dq/i)) {
+                    continue;
+                }
+                
+                const swimMatch = line.match(/(\d+)([ym])\s+(free|fly|back|breast|im)[:\s]+([^-]+)/i);
+                if (swimMatch) {
+                    const distance = swimMatch[1];
+                    const unit = swimMatch[2].toLowerCase();
+                    const stroke = swimMatch[3];
+                    const timeStr = swimMatch[4].trim();
+                    
+                    // Only process if it's yards (y) or meters (m) matching our course
+                    // Skip if unit doesn't match course (y=SCY, m=LCM)
+                    const expectedUnit = currentMeet.course === 'SCY' ? 'y' : 'm';
+                    if (unit !== expectedUnit) continue;
+                    
+                    // Extract first time (before "last")
+                    const firstTime = timeStr.split(/\s*-\s*last/i)[0].trim();
+                    
+                    const time = parseFreeformTime(firstTime);
+                    if (time === null) continue;
+                    
+                    // Build event name
+                    const eventName = `${distance} ${stroke.charAt(0).toUpperCase() + stroke.slice(1)}`;
+                    
+                    swims.push({
+                        date: currentMeet.date,
+                        meetName: currentMeet.name,
+                        course: currentMeet.course,
+                        event: eventName,
+                        time: time
+                    });
+                }
+            }
+            
+            return swims;
+        }
+        
+        function parseDate(dateStr) {
+            // Parse "7 Feb 2026" format
+            const months = {
+                'jan': 0, 'feb': 1, 'mar': 2, 'apr': 3, 'may': 4, 'jun': 5,
+                'jul': 6, 'aug': 7, 'sep': 8, 'oct': 9, 'nov': 10, 'dec': 11
+            };
+            
+            const match = dateStr.match(/(\d+)\s+([a-z]+)\s+(\d{4})/i);
+            if (match) {
+                const day = parseInt(match[1]);
+                const monthStr = match[2].toLowerCase().substring(0, 3);
+                const year = parseInt(match[3]);
+                const month = months[monthStr];
+                
+                if (month !== undefined) {
+                    const date = new Date(year, month, day);
+                    return date.toISOString().split('T')[0];
+                }
+            }
+            
+            // Fallback to today's date
+            return new Date().toISOString().split('T')[0];
+        }
+        
+        function previewBulkImport() {
+            const text = document.getElementById('bulkText').value;
+            bulkParsedSwims = parseBulkText(text);
+            
+            const preview = document.getElementById('bulkPreview');
+            const count = document.getElementById('previewCount');
+            const content = document.getElementById('previewContent');
+            
+            if (bulkParsedSwims.length === 0) {
+                alert('No valid swim times found. Please check the format.');
+                preview.style.display = 'none';
+                return;
+            }
+            
+            count.textContent = bulkParsedSwims.length;
+            content.innerHTML = bulkParsedSwims.map((swim, idx) => `
+                <div style="background: white; padding: 12px; margin: 8px 0; border-radius: 6px; border-left: 4px solid #4caf50;">
+                    <strong>${idx + 1}. ${swim.event} (${swim.course})</strong><br>
+                    <span style="color: #666;">Time: ${formatTime(swim.time)} | ${swim.meetName} | ${new Date(swim.date).toLocaleDateString()}</span>
+                </div>
+            `).join('');
+            
+            preview.style.display = 'block';
+        }
+        
+        document.getElementById('bulkForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (bulkParsedSwims.length === 0) {
+                alert('Please preview the import first!');
+                return;
+            }
+            
+            // Add all parsed swims
+            bulkParsedSwims.forEach(swim => {
+                swims.push({
+                    id: Date.now() + Math.random(), // Unique ID
+                    ...swim
+                });
+            });
+            
+            localStorage.setItem('swimData', JSON.stringify(swims));
+            
+            // Reset form
+            document.getElementById('bulkText').value = '';
+            document.getElementById('bulkPreview').style.display = 'none';
+            bulkParsedSwims = [];
+            
+            alert(`Successfully imported ${bulkParsedSwims.length} swim times!`);
+            populateEventFilters();
+            updateProgressCharts();
+            updateRecords();
+            updateHistory();
+        });
+
+        // Toggle between separate fields and free-form input
+        function toggleTimeInput() {
+            const method = document.querySelector('input[name="timeMethod"]:checked').value;
+            const separateFields = document.getElementById('separateFields');
+            const freeformField = document.getElementById('freeformField');
+            
+            if (method === 'freeform') {
+                separateFields.style.display = 'none';
+                freeformField.style.display = 'block';
+                // Remove required from separate fields
+                document.getElementById('minutes').removeAttribute('required');
+                document.getElementById('seconds').removeAttribute('required');
+                document.getElementById('milliseconds').removeAttribute('required');
+                // Add required to freeform
+                document.getElementById('freeformTime').setAttribute('required', 'required');
+            } else {
+                separateFields.style.display = 'grid';
+                freeformField.style.display = 'none';
+                // Add required to separate fields
+                document.getElementById('minutes').setAttribute('required', 'required');
+                document.getElementById('seconds').setAttribute('required', 'required');
+                document.getElementById('milliseconds').setAttribute('required', 'required');
+                // Remove required from freeform
+                document.getElementById('freeformTime').removeAttribute('required');
+            }
+        }
+
+        // Parse free-form time input
+        function parseFreeformTime(input) {
+            // Remove whitespace
+            input = input.trim();
+            
+            // Replace commas with periods (some countries use commas for decimals)
+            input = input.replace(',', '.');
+            
+            let minutes = 0;
+            let seconds = 0;
+            let hundredths = 0;
+            
+            // Pattern 1: mm:ss.ms or mm:ss:ms (e.g., 1:23.45 or 1:23:45)
+            const pattern1 = /^(\d+)[:.](\d+)[:\.](\d+)$/;
+            // Pattern 2: ss.ms (e.g., 32.18)
+            const pattern2 = /^(\d+)\.(\d+)$/;
+            // Pattern 3: mm:ss (e.g., 1:23)
+            const pattern3 = /^(\d+):(\d+)$/;
+            
+            let match;
+            
+            if (match = input.match(pattern1)) {
+                // mm:ss.ms or mm:ss:ms
+                minutes = parseInt(match[1]);
+                seconds = parseInt(match[2]);
+                hundredths = parseInt(match[3]);
+                
+                // Handle if third part is meant to be milliseconds (3 digits)
+                if (match[3].length === 3) {
+                    hundredths = Math.round(parseInt(match[3]) / 10);
+                } else if (match[3].length === 1) {
+                    // Single digit - multiply by 10
+                    hundredths = parseInt(match[3]) * 10;
+                }
+            } else if (match = input.match(pattern2)) {
+                // ss.ms
+                seconds = parseInt(match[1]);
+                const decimal = match[2];
+                
+                // Handle different decimal lengths
+                if (decimal.length === 1) {
+                    hundredths = parseInt(decimal) * 10;
+                } else if (decimal.length === 2) {
+                    hundredths = parseInt(decimal);
+                } else if (decimal.length === 3) {
+                    hundredths = Math.round(parseInt(decimal) / 10);
+                }
+            } else if (match = input.match(pattern3)) {
+                // mm:ss
+                minutes = parseInt(match[1]);
+                seconds = parseInt(match[2]);
+                hundredths = 0;
+            } else {
+                // Try parsing as plain seconds
+                const plainSeconds = parseFloat(input);
+                if (!isNaN(plainSeconds)) {
+                    minutes = Math.floor(plainSeconds / 60);
+                    const remainingSeconds = plainSeconds % 60;
+                    seconds = Math.floor(remainingSeconds);
+                    hundredths = Math.round((remainingSeconds - seconds) * 100);
+                } else {
+                    return null; // Invalid format
+                }
+            }
+            
+            // Validate ranges
+            if (seconds >= 60 || hundredths >= 100) {
+                return null;
+            }
+            
+            // Convert to total seconds
+            return minutes * 60 + seconds + (hundredths / 100);
+        }
 
         // Initialize
         document.getElementById('meetDate').valueAsDate = new Date();
@@ -503,9 +807,23 @@
         document.getElementById('swimForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const minutes = parseInt(document.getElementById('minutes').value);
-            const seconds = parseFloat(document.getElementById('seconds').value);
-            const totalSeconds = minutes * 60 + seconds;
+            let totalSeconds;
+            const method = document.querySelector('input[name="timeMethod"]:checked').value;
+            
+            if (method === 'freeform') {
+                const freeformInput = document.getElementById('freeformTime').value;
+                totalSeconds = parseFreeformTime(freeformInput);
+                
+                if (totalSeconds === null) {
+                    alert('Invalid time format! Please use formats like:\n• 1:23.45 (1 min 23.45 sec)\n• 32.18 (32.18 seconds)\n• 1:23 (1 min 23 sec)');
+                    return;
+                }
+            } else {
+                const minutes = parseInt(document.getElementById('minutes').value);
+                const seconds = parseInt(document.getElementById('seconds').value);
+                const hundredths = parseInt(document.getElementById('milliseconds').value);
+                totalSeconds = minutes * 60 + seconds + (hundredths / 100);
+            }
             
             const swim = {
                 id: Date.now(),
@@ -521,6 +839,9 @@
             
             this.reset();
             document.getElementById('meetDate').valueAsDate = new Date();
+            document.getElementById('minutes').value = '0';
+            document.getElementById('seconds').value = '0';
+            document.getElementById('milliseconds').value = '0';
             
             alert('Swim time added successfully!');
             populateEventFilters();
