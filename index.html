@@ -917,6 +917,11 @@
             if (method === 'freeform') {
                 const freeformInput = document.getElementById('freeformTime').value.trim();
                 
+                if (!freeformInput) {
+                    alert('Please enter swim data!');
+                    return;
+                }
+                
                 // Check if it's multi-line (contains newlines)
                 if (freeformInput.includes('\n')) {
                     // Use bulk parser
@@ -944,18 +949,33 @@
                 });
                 
             } else {
-                // Separate fields method
-                const minutes = parseInt(document.getElementById('minutes').value);
-                const seconds = parseInt(document.getElementById('seconds').value);
-                const hundredths = parseInt(document.getElementById('milliseconds').value);
+                // Separate fields method - validate required fields
+                const meetDate = document.getElementById('meetDate').value;
+                const meetName = document.getElementById('meetName').value.trim();
+                const course = document.getElementById('course').value;
+                const event = document.getElementById('event').value;
+                
+                if (!meetDate || !meetName || !course || !event) {
+                    alert('Please fill in all required fields: Date, Meet Name, Course, and Event!');
+                    return;
+                }
+                
+                const minutes = parseInt(document.getElementById('minutes').value) || 0;
+                const seconds = parseInt(document.getElementById('seconds').value) || 0;
+                const hundredths = parseInt(document.getElementById('milliseconds').value) || 0;
                 const totalSeconds = minutes * 60 + seconds + (hundredths / 100);
+                
+                if (totalSeconds === 0) {
+                    alert('Please enter a valid time!');
+                    return;
+                }
                 
                 const swim = {
                     id: Date.now(),
-                    date: document.getElementById('meetDate').value,
-                    meetName: document.getElementById('meetName').value,
-                    course: document.getElementById('course').value,
-                    event: document.getElementById('event').value,
+                    date: meetDate,
+                    meetName: meetName,
+                    course: course,
+                    event: event,
                     time: totalSeconds
                 };
                 
@@ -1038,129 +1058,154 @@
         }
 
         function updateProgressCharts() {
-            const eventFilter = document.getElementById('progressEvent').value;
-            const courseFilter = document.getElementById('progressCourse').value;
-            
-            let filteredSwims = swims.filter(s => {
-                return (!eventFilter || s.event === eventFilter) &&
-                       (!courseFilter || s.course === courseFilter);
-            });
-            
-            filteredSwims.sort((a, b) => new Date(a.date) - new Date(b.date));
-            
-            const canvas1 = document.getElementById('progressChart');
-            const canvas2 = document.getElementById('speedChart');
-            const ctx1 = canvas1.getContext('2d');
-            const ctx2 = canvas2.getContext('2d');
-            
-            if (progressChart) progressChart.destroy();
-            if (speedChart) speedChart.destroy();
-            
-            if (filteredSwims.length === 0) {
-                // Show empty state message
-                canvas1.style.display = 'none';
-                canvas2.style.display = 'none';
+            try {
+                const eventFilter = document.getElementById('progressEvent').value;
+                const courseFilter = document.getElementById('progressCourse').value;
                 
-                // Add empty state to the progress tab if not exists
-                const progressTab = document.getElementById('progress');
-                let emptyDiv = document.getElementById('emptyProgress');
+                let filteredSwims = swims.filter(s => {
+                    return (!eventFilter || s.event === eventFilter) &&
+                           (!courseFilter || s.course === courseFilter);
+                });
                 
-                if (!emptyDiv) {
-                    emptyDiv = document.createElement('div');
-                    emptyDiv.id = 'emptyProgress';
-                    emptyDiv.innerHTML = '<div class="empty-state" style="text-align: center; padding: 60px 20px; color: #999; font-size: 1.1em;"><svg width="100" height="100" viewBox="0 0 100 100" style="opacity: 0.3; margin-bottom: 20px;"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="3"/><line x1="30" y1="50" x2="70" y2="50" stroke="currentColor" stroke-width="3"/></svg><p>No swim data to display. Add some swim times to see your progress!</p></div>';
+                filteredSwims.sort((a, b) => new Date(a.date) - new Date(b.date));
+                
+                console.log('Filtered swims for charts:', filteredSwims.length);
+                
+                const canvas1 = document.getElementById('progressChart');
+                const canvas2 = document.getElementById('speedChart');
+                
+                if (!canvas1 || !canvas2) {
+                    console.error('Canvas elements not found!');
+                    return;
+                }
+                
+                const ctx1 = canvas1.getContext('2d');
+                const ctx2 = canvas2.getContext('2d');
+                
+                if (progressChart) {
+                    progressChart.destroy();
+                    progressChart = null;
+                }
+                if (speedChart) {
+                    speedChart.destroy();
+                    speedChart = null;
+                }
+                
+                if (filteredSwims.length === 0) {
+                    // Show empty state message
+                    canvas1.style.display = 'none';
+                    canvas2.style.display = 'none';
                     
-                    // Insert after the filter controls
-                    const filterControls = progressTab.querySelector('.filter-controls');
-                    filterControls.parentNode.insertBefore(emptyDiv, filterControls.nextSibling);
-                }
-                emptyDiv.style.display = 'block';
-                return;
-            }
-            
-            // Remove empty state if it exists
-            const emptyState = document.getElementById('emptyProgress');
-            if (emptyState) emptyState.style.display = 'none';
-            
-            canvas1.style.display = 'block';
-            canvas2.style.display = 'block';
-            
-            // Group by event for multiple lines
-            const eventGroups = {};
-            filteredSwims.forEach(swim => {
-                const key = `${swim.event} (${swim.course})`;
-                if (!eventGroups[key]) eventGroups[key] = [];
-                eventGroups[key].push(swim);
-            });
-            
-            const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
-            
-            const datasets = Object.keys(eventGroups).map((key, idx) => ({
-                label: key,
-                data: eventGroups[key].map(s => ({ x: s.date, y: s.time })),
-                borderColor: colors[idx % colors.length],
-                backgroundColor: colors[idx % colors.length] + '33',
-                tension: 0.4,
-                fill: false
-            }));
-            
-            progressChart = new Chart(ctx1, {
-                type: 'line',
-                data: { datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: true, text: 'Time Progress (Lower is Better)', font: { size: 16 } },
-                        legend: { display: true }
-                    },
-                    scales: {
-                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
-                        y: { 
-                            reverse: true,
-                            title: { display: true, text: 'Time (seconds)' },
-                            ticks: { callback: value => formatTime(value) }
-                        }
+                    // Add empty state to the progress tab if not exists
+                    const progressTab = document.getElementById('progress');
+                    let emptyDiv = document.getElementById('emptyProgress');
+                    
+                    if (!emptyDiv) {
+                        emptyDiv = document.createElement('div');
+                        emptyDiv.id = 'emptyProgress';
+                        emptyDiv.innerHTML = '<div class="empty-state" style="text-align: center; padding: 60px 20px; color: #999; font-size: 1.1em;"><svg width="100" height="100" viewBox="0 0 100 100" style="opacity: 0.3; margin-bottom: 20px;"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="3"/><line x1="30" y1="50" x2="70" y2="50" stroke="currentColor" stroke-width="3"/></svg><p>No swim data to display. Add some swim times to see your progress!</p></div>';
+                        
+                        // Insert after the filter controls
+                        const filterControls = progressTab.querySelector('.filter-controls');
+                        filterControls.parentNode.insertBefore(emptyDiv, filterControls.nextSibling);
                     }
+                    emptyDiv.style.display = 'block';
+                    console.log('Showing empty state');
+                    return;
                 }
-            });
-            
-            // Speed chart
-            const speedDatasets = Object.keys(eventGroups).map((key, idx) => {
-                const event = eventGroups[key][0].event;
-                const distance = parseInt(event.split(' ')[0]);
-                return {
+                
+                // Remove empty state if it exists
+                const emptyState = document.getElementById('emptyProgress');
+                if (emptyState) emptyState.style.display = 'none';
+                
+                canvas1.style.display = 'block';
+                canvas2.style.display = 'block';
+                
+                // Group by event for multiple lines
+                const eventGroups = {};
+                filteredSwims.forEach(swim => {
+                    const key = `${swim.event} (${swim.course})`;
+                    if (!eventGroups[key]) eventGroups[key] = [];
+                    eventGroups[key].push(swim);
+                });
+                
+                console.log('Event groups:', Object.keys(eventGroups));
+                
+                const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
+                
+                const datasets = Object.keys(eventGroups).map((key, idx) => ({
                     label: key,
-                    data: eventGroups[key].map(s => ({ 
-                        x: s.date, 
-                        y: distance / s.time 
-                    })),
+                    data: eventGroups[key].map(s => ({ x: s.date, y: s.time })),
                     borderColor: colors[idx % colors.length],
                     backgroundColor: colors[idx % colors.length] + '33',
                     tension: 0.4,
                     fill: false
-                };
-            });
-            
-            speedChart = new Chart(ctx2, {
-                type: 'line',
-                data: { datasets: speedDatasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        title: { display: true, text: 'Speed Progress (Higher is Better)', font: { size: 16 } },
-                        legend: { display: true }
-                    },
-                    scales: {
-                        x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
-                        y: { 
-                            title: { display: true, text: 'Speed (m/s)' },
-                            ticks: { callback: value => value.toFixed(2) }
+                }));
+                
+                progressChart = new Chart(ctx1, {
+                    type: 'line',
+                    data: { datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Time Progress (Lower is Better)', font: { size: 16 } },
+                            legend: { display: true }
+                        },
+                        scales: {
+                            x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                            y: { 
+                                reverse: true,
+                                title: { display: true, text: 'Time (seconds)' },
+                                ticks: { callback: value => formatTime(value) }
+                            }
                         }
                     }
-                }
-            });
+                });
+                
+                console.log('Progress chart created');
+                
+                // Speed chart
+                const speedDatasets = Object.keys(eventGroups).map((key, idx) => {
+                    const event = eventGroups[key][0].event;
+                    const distance = parseInt(event.split(' ')[0]);
+                    return {
+                        label: key,
+                        data: eventGroups[key].map(s => ({ 
+                            x: s.date, 
+                            y: distance / s.time 
+                        })),
+                        borderColor: colors[idx % colors.length],
+                        backgroundColor: colors[idx % colors.length] + '33',
+                        tension: 0.4,
+                        fill: false
+                    };
+                });
+                
+                speedChart = new Chart(ctx2, {
+                    type: 'line',
+                    data: { datasets: speedDatasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: { display: true, text: 'Speed Progress (Higher is Better)', font: { size: 16 } },
+                            legend: { display: true }
+                        },
+                        scales: {
+                            x: { type: 'time', time: { unit: 'day' }, title: { display: true, text: 'Date' } },
+                            y: { 
+                                title: { display: true, text: 'Speed (m/s)' },
+                                ticks: { callback: value => value.toFixed(2) }
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Speed chart created');
+            } catch (error) {
+                console.error('Error updating progress charts:', error);
+            }
         }
 
         function updateRecords() {
