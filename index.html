@@ -1047,8 +1047,29 @@
             if (speedChart) speedChart.destroy();
             
             if (filteredSwims.length === 0) {
+                // Show empty state message
+                ctx1.canvas.style.display = 'none';
+                ctx2.canvas.style.display = 'none';
+                
+                const container1 = ctx1.canvas.parentElement;
+                const container2 = ctx2.canvas.parentElement;
+                
+                if (!document.getElementById('emptyProgress')) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.id = 'emptyProgress';
+                    emptyDiv.className = 'empty-state';
+                    emptyDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 60px 20px;">No swim data to display. Add some swim times to see your progress!</p>';
+                    container1.appendChild(emptyDiv);
+                }
                 return;
             }
+            
+            // Remove empty state if it exists
+            const emptyState = document.getElementById('emptyProgress');
+            if (emptyState) emptyState.remove();
+            
+            ctx1.canvas.style.display = 'block';
+            ctx2.canvas.style.display = 'block';
             
             // Group by event for multiple lines
             const eventGroups = {};
