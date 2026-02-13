@@ -398,15 +398,15 @@
                 <div id="separateFields" class="form-row">
                     <div class="form-group">
                         <label for="minutes">Minutes</label>
-                        <input type="number" id="minutes" min="0" max="59" value="0">
+                        <input type="number" id="minutes" min="0" max="59" value="0" required>
                     </div>
                     <div class="form-group">
                         <label for="seconds">Seconds</label>
-                        <input type="number" id="seconds" min="0" max="59" value="0">
+                        <input type="number" id="seconds" min="0" max="59" value="0" required>
                     </div>
                     <div class="form-group">
                         <label for="milliseconds">Hundredths (00-99)</label>
-                        <input type="number" id="milliseconds" min="0" max="99" value="0">
+                        <input type="number" id="milliseconds" min="0" max="99" value="0" required>
                     </div>
                 </div>
 
@@ -725,6 +725,10 @@
                 document.getElementById('minutes').removeAttribute('required');
                 document.getElementById('seconds').removeAttribute('required');
                 document.getElementById('milliseconds').removeAttribute('required');
+                document.getElementById('meetDate').removeAttribute('required');
+                document.getElementById('meetName').removeAttribute('required');
+                document.getElementById('course').removeAttribute('required');
+                document.getElementById('event').removeAttribute('required');
                 // Add required to freeform
                 document.getElementById('freeformTime').setAttribute('required', 'required');
             } else {
@@ -734,6 +738,10 @@
                 document.getElementById('minutes').setAttribute('required', 'required');
                 document.getElementById('seconds').setAttribute('required', 'required');
                 document.getElementById('milliseconds').setAttribute('required', 'required');
+                document.getElementById('meetDate').setAttribute('required', 'required');
+                document.getElementById('meetName').setAttribute('required', 'required');
+                document.getElementById('course').setAttribute('required', 'required');
+                document.getElementById('event').setAttribute('required', 'required');
                 // Remove required from freeform
                 document.getElementById('freeformTime').removeAttribute('required');
             }
@@ -1040,36 +1048,42 @@
             
             filteredSwims.sort((a, b) => new Date(a.date) - new Date(b.date));
             
-            const ctx1 = document.getElementById('progressChart').getContext('2d');
-            const ctx2 = document.getElementById('speedChart').getContext('2d');
+            const canvas1 = document.getElementById('progressChart');
+            const canvas2 = document.getElementById('speedChart');
+            const ctx1 = canvas1.getContext('2d');
+            const ctx2 = canvas2.getContext('2d');
             
             if (progressChart) progressChart.destroy();
             if (speedChart) speedChart.destroy();
             
             if (filteredSwims.length === 0) {
                 // Show empty state message
-                ctx1.canvas.style.display = 'none';
-                ctx2.canvas.style.display = 'none';
+                canvas1.style.display = 'none';
+                canvas2.style.display = 'none';
                 
-                const container1 = ctx1.canvas.parentElement;
-                const container2 = ctx2.canvas.parentElement;
+                // Add empty state to the progress tab if not exists
+                const progressTab = document.getElementById('progress');
+                let emptyDiv = document.getElementById('emptyProgress');
                 
-                if (!document.getElementById('emptyProgress')) {
-                    const emptyDiv = document.createElement('div');
+                if (!emptyDiv) {
+                    emptyDiv = document.createElement('div');
                     emptyDiv.id = 'emptyProgress';
-                    emptyDiv.className = 'empty-state';
-                    emptyDiv.innerHTML = '<p style="color: #999; text-align: center; padding: 60px 20px;">No swim data to display. Add some swim times to see your progress!</p>';
-                    container1.appendChild(emptyDiv);
+                    emptyDiv.innerHTML = '<div class="empty-state" style="text-align: center; padding: 60px 20px; color: #999; font-size: 1.1em;"><svg width="100" height="100" viewBox="0 0 100 100" style="opacity: 0.3; margin-bottom: 20px;"><circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="3"/><line x1="30" y1="50" x2="70" y2="50" stroke="currentColor" stroke-width="3"/></svg><p>No swim data to display. Add some swim times to see your progress!</p></div>';
+                    
+                    // Insert after the filter controls
+                    const filterControls = progressTab.querySelector('.filter-controls');
+                    filterControls.parentNode.insertBefore(emptyDiv, filterControls.nextSibling);
                 }
+                emptyDiv.style.display = 'block';
                 return;
             }
             
             // Remove empty state if it exists
             const emptyState = document.getElementById('emptyProgress');
-            if (emptyState) emptyState.remove();
+            if (emptyState) emptyState.style.display = 'none';
             
-            ctx1.canvas.style.display = 'block';
-            ctx2.canvas.style.display = 'block';
+            canvas1.style.display = 'block';
+            canvas2.style.display = 'block';
             
             // Group by event for multiple lines
             const eventGroups = {};
