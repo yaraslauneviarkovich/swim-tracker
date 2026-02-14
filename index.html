@@ -1161,6 +1161,11 @@
                 
                 console.log('Creating chart with datasets:', datasets);
                 
+                // Find the earliest date in the data
+                const allDates = filteredSwims.map(s => new Date(s.date).getTime());
+                const minDate = Math.min(...allDates);
+                const maxDate = Math.max(...allDates);
+                
                 try {
                     progressChart = new Chart(ctx1, {
                         type: 'line',
@@ -1174,7 +1179,9 @@
                             },
                             scales: {
                                 x: { 
-                                    type: 'time', 
+                                    type: 'time',
+                                    min: minDate,
+                                    max: maxDate,
                                     time: { 
                                         unit: 'day',
                                         displayFormats: {
@@ -1227,7 +1234,9 @@
                             },
                             scales: {
                                 x: { 
-                                    type: 'time', 
+                                    type: 'time',
+                                    min: minDate,
+                                    max: maxDate,
                                     time: { 
                                         unit: 'day',
                                         displayFormats: {
