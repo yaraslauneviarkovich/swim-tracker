@@ -1062,6 +1062,8 @@
 
         function updateProgressCharts() {
             try {
+                console.log('updateProgressCharts called. Total swims in memory:', swims.length);
+                
                 const eventFilter = document.getElementById('progressEvent').value;
                 const courseFilter = document.getElementById('progressCourse').value;
                 
@@ -1072,7 +1074,7 @@
                 
                 filteredSwims.sort((a, b) => new Date(a.date) - new Date(b.date));
                 
-                console.log('Filtered swims for charts:', filteredSwims.length);
+                console.log('Filtered swims for charts:', filteredSwims.length, filteredSwims);
                 
                 const canvas1 = document.getElementById('progressChart');
                 const canvas2 = document.getElementById('speedChart');
@@ -1182,7 +1184,6 @@
                                     title: { display: true, text: 'Date' } 
                                 },
                                 y: { 
-                                    reverse: true,
                                     title: { display: true, text: 'Time (seconds)' },
                                     ticks: { callback: value => formatTime(value) }
                                 }
@@ -1409,10 +1410,24 @@
             if (confirm('Are you sure you want to delete this swim time?')) {
                 swims = swims.filter(s => s.id !== id);
                 localStorage.setItem('swimData', JSON.stringify(swims));
+                
+                // Destroy existing charts before updating
+                if (progressChart) {
+                    progressChart.destroy();
+                    progressChart = null;
+                }
+                if (speedChart) {
+                    speedChart.destroy();
+                    speedChart = null;
+                }
+                
+                // Update all views
                 populateEventFilters();
                 updateProgressCharts();
                 updateRecords();
                 updateHistory();
+                
+                console.log('Swim deleted, all views updated. Remaining swims:', swims.length);
             }
         }
     </script>
